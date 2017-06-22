@@ -1,0 +1,33 @@
+services:
+    best_it_feature_toggle.bag.feature_bag:
+        class: BestIt\FeatureToggleBundle\Bag\FeatureBag
+
+    best_it_feature_toggle.bag.stash_bag:
+        class: BestIt\FeatureToggleBundle\Bag\StashBag
+
+    best_it_feature_toggle.manager.feature_manager:
+        class: BestIt\FeatureToggleBundle\Manager\FeatureManager
+        arguments:
+            - '@best_it_feature_toggle.bag.stash_bag'
+
+    best_it_feature_toggle.twig.toggle_extension:
+        class: BestIt\FeatureToggleBundle\Twig\ToggleExtension
+        arguments:
+            - '@best_it_feature_toggle.manager.feature_manager'
+        tags:
+            - { name: twig.extension }
+
+    best_it_feature_toggle.listener.annotation_subscriber:
+        class: BestIt\FeatureToggleBundle\Listener\AnnotationSubscriber
+        arguments:
+            - '@annotations.reader'
+            - '@best_it_feature_toggle.manager.feature_manager'
+        tags:
+            - { name: kernel.event_subscriber }
+
+    best_it_feature_toggle.stash.config_stash:
+        class: BestIt\FeatureToggleBundle\Stash\ConfigStash
+        arguments:
+            - '@best_it_feature_toggle.bag.feature_bag'
+        tags:
+            - { name: best_it_feature_toggle.stash, priority: 0 }

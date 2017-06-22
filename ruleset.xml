@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<ruleset name="bestit/feature-toggle-bundle">
+    <rule ref="PSR2"/>
+    <rule ref="Generic.Commenting.DocComment">
+        <exclude name="Generic.Commenting.DocComment.TagValueIndent"/>
+    </rule>
+</ruleset>
