@@ -31,3 +31,14 @@ services:
             - '@best_it_feature_toggle.bag.feature_bag'
         tags:
             - { name: best_it_feature_toggle.stash, priority: 0 }
+
+    best_it_feature_toggle.profiler.feature_data_collector:
+        class: BestIt\FeatureToggleBundle\Profiler\FeatureDataCollector
+        arguments:
+            - '@best_it_feature_toggle.bag.stash_bag'
+        tags:
+            -
+                name:     data_collector
+                template: '@BestItFeatureToggle/profiler/layout.html.twig'
+                id:       'best_it_feature_toggle.profiler.feature_data_collector'
+        public: false

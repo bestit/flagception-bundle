@@ -1,0 +1,39 @@
+{% extends 'WebProfilerBundle:Profiler:layout.html.twig' %}
+
+{% block toolbar %}
+    {% set icon %}
+        <div class="sf-toolbar-icon">
+            <span class="sf-toolbar-value">{{ collector.activeFeatures|length }}</span>
+            <span class="sf-toolbar-label"> Features</span>
+        </div>
+    {% endset %}
+
+    {{ include('@WebProfiler/Profiler/toolbar_item.html.twig', { link: true }) }}
+{% endblock %}
+
+{% block menu %}
+    <span class="label">
+        <strong>Features</strong>
+        <span class="count">
+            <span>{{ collector.activeFeatures|length }}</span>
+        </span>
+    </span>
+{% endblock %}
+
+{% block panel %}
+    <h2>Active features</h2>
+    <table>
+        <thead>
+        <tr>
+            <th class="col">Feature name</th>
+            <th class="col">Activate by</th>
+        </tr>
+        </thead>
+        {% for name, stashes in collector.activeFeatures %}
+            <tr>
+                <td>{{ name }}</td>
+                <td>{{ stashes|join(', ') }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}
