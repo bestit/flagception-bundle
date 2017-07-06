@@ -1,4 +1,4 @@
-# best-it/feature-toggle-bundle
+# bestit/feature-toggle-bundle
 The feature toggle bundle provide a very simple way to enable or disable parts of your code.
 
 
