@@ -32,11 +32,5 @@
     "phpmd/phpmd": "^2.6",
     "phploc/phploc": "^3.0"
   },
-  "type": "lib",
-  "repositories": [
-    {
-      "type": "vcs",
-      "url": "git@bitbucket.org:best-it/commercetools-bundle.git"
-    }
-  ]
+  "type": "lib"
 }
