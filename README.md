@@ -83,7 +83,7 @@ best_it_feature_toggle:
 
 Step 4: Stashes
 -------------------------
-You must not set all features in your config.yml. You can use stash services which return active features. This bundle 
+You do not need to set all features in your config.yml. You can use stash services which return active features. This bundle 
 include two stashes:
 
 __ConfigStash__:
