@@ -1,4 +1,4 @@
-## [Unreleased]
+## [1.0.0] - 2017-08-02
 ### Changed
 - Symfony min version downgraded from ^3.2 to ^3.1 @chowanski
 - Profiler toolbar hides feature section when 0 features are active
