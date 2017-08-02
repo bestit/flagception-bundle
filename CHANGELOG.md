@@ -1,3 +1,11 @@
+## [1.0.2] - 2017-08-02
+### Added
+- Add getName method in twig extension for supporting twig version < 1.26 @chowanski
+
+## [1.0.1] - 2017-08-02
+### Removed
+- Removed obsolete repository in composer.json @chowanski
+
 ## [1.0.0] - 2017-08-02
 ### Changed
 - Symfony min version downgraded from ^3.2 to ^3.1 @chowanski

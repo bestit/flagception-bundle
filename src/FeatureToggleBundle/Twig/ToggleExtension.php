@@ -63,4 +63,15 @@ class ToggleExtension extends Twig_Extension
             new Twig_SimpleTest('active feature', [$this, 'isActive']),
         ];
     }
+
+    /**
+     * Returns the name
+     * (needed for supporting twig <1.26)
+     *
+     * @return string
+     */
+    public function getName(): string
+    {
+        return 'best_it_feature_toggle.twig.toggle_extension';
+    }
 }
