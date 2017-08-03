@@ -1,4 +1,4 @@
-## [Unreleased]
+## [1.0.3] - 2017-08-03
 ### Added
 - Add error message for annotation subscriber if feature is inactive @chowanski
 
