@@ -1,3 +1,10 @@
+## [Unreleased]
+### Added
+- Add error message for annotation subscriber if feature is inactive @chowanski
+
+### Change
+- Fix 'Cannot use object of type Closure as array' error @chowanski
+
 ## [1.0.2] - 2017-08-02
 ### Added
 - Add getName method in twig extension for supporting twig version < 1.26 @chowanski

@@ -58,18 +58,28 @@ class AnnotationSubscriber implements EventSubscriberInterface
     public function onKernelController(FilterControllerEvent $event)
     {
         $controller = $event->getController();
+
+        /*
+         * $controller passed can be either a class or a Closure.
+         * This is not usual in Symfony2 but it may happen.
+         * If it is a class, it comes in array format
+         */
+        if (!is_array($controller)) {
+            return;
+        }
+
         $class = ClassUtils::getClass($controller[0]);
 
         try {
             $object = new ReflectionClass($class);
         } catch (ReflectionException $exception) {
-            throw new NotFoundHttpException('Unable to reflect class');
+            throw new NotFoundHttpException('Unable to reflect class.');
         }
 
         foreach ($this->reader->getClassAnnotations($object) as $annotation) {
             if ($annotation instanceof Feature) {
                 if (!$this->manager->isActive($annotation->name)) {
-                    throw new NotFoundHttpException();
+                    throw new NotFoundHttpException('Feature for this class is not active.');
                 }
             }
         }
@@ -78,7 +88,7 @@ class AnnotationSubscriber implements EventSubscriberInterface
         foreach ($this->reader->getMethodAnnotations($method) as $annotation) {
             if ($annotation instanceof Feature) {
                 if (!$this->manager->isActive($annotation->name)) {
-                    throw new NotFoundHttpException();
+                    throw new NotFoundHttpException('Feature for this method is not active.');
                 }
             }
         }
