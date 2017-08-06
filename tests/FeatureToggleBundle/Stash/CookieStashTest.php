@@ -1,7 +1,8 @@
 <?php
 
-namespace BestIt\FeatureToggleBundle\Tests\Stash;
+namespace Tests\BestIt\FeatureToggleBundle\Stash;
 
+use BestIt\FeatureToggleBundle\Model\Context;
 use BestIt\FeatureToggleBundle\Stash\CookieStash;
 use BestIt\FeatureToggleBundle\Stash\StashInterface;
 use PHPUnit\Framework\TestCase;
@@ -12,7 +13,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
  * Class CookieStashTest
  *
  * @author Michel Chowanski <chowanski@bestit-online.de>
- * @package BestIt\FeatureToggleBundle\Tests\Stash
+ * @package Tests\BestIt\FeatureToggleBundle\Stash
  */
 class CookieStashTest extends TestCase
 {
@@ -39,44 +40,44 @@ class CookieStashTest extends TestCase
     }
 
     /**
-     * Test get active features without master request
+     * Test is active without master request
      *
      * @return void
      */
-    public function testGetActiveFeaturesWithoutRequest()
+    public function testIsActiveWithoutRequest()
     {
         $stash = new CookieStash(new RequestStack(), 'foo-cookie');
-        static::assertEquals([], $stash->getActiveFeatures());
+        static::assertFalse($stash->isActive('feature_123', new Context()));
     }
 
     /**
-     * Test get active features without cookie
+     * Test is active without cookie
      *
      * @return void
      */
-    public function testGetActiveFeaturesWithoutCookie()
+    public function testIsActiveWithoutCookie()
     {
         $stash = new CookieStash($stack = new RequestStack(), 'foo-cookie');
         $stack->push(new Request());
 
-        static::assertEquals([], $stash->getActiveFeatures());
+        static::assertFalse($stash->isActive('feature_123', new Context()));
     }
 
     /**
-     * Test get one active features
+     * Test is active with one feature
      *
      * @return void
      */
-    public function testGetOneActiveFeature()
+    public function testIsActiveFeature()
     {
         $stash = new CookieStash($stack = new RequestStack(), 'foo-cookie');
         $stack->push(new Request([], [], [], ['foo-cookie' => 'feature_123']));
 
-        static::assertEquals(['feature_123'], $stash->getActiveFeatures());
+        static::assertTrue($stash->isActive('feature_123', new Context()));
     }
 
     /**
-     * Test get active features
+     * Test is active with multiple features
      *
      * @return void
      */
@@ -85,19 +86,8 @@ class CookieStashTest extends TestCase
         $stash = new CookieStash($stack = new RequestStack(), 'foo-cookie');
         $stack->push(new Request([], [], [], ['foo-cookie' => 'feature_123,feature_abc,feature_784']));
 
-        static::assertEquals(['feature_123', 'feature_abc', 'feature_784'], $stash->getActiveFeatures());
-    }
-
-    /**
-     * Test get active features
-     *
-     * @return void
-     */
-    public function testGetActiveFeaturesWithTrimmedValues()
-    {
-        $stash = new CookieStash($stack = new RequestStack(), 'foo-cookie');
-        $stack->push(new Request([], [], [], ['foo-cookie' => 'feature_123, feature_abc, feature_784']));
-
-        static::assertEquals(['feature_123', 'feature_abc', 'feature_784'], $stash->getActiveFeatures());
+        static::assertTrue($stash->isActive('feature_123', new Context()));
+        static::assertTrue($stash->isActive('feature_784', new Context()));
+        static::assertFalse($stash->isActive('feature_xyz', new Context()));
     }
 }

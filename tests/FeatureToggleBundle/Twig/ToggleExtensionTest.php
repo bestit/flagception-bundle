@@ -1,6 +1,6 @@
 <?php
 
-namespace BestIt\FeatureToggleBundle\Tests\Twig;
+namespace Tests\BestIt\FeatureToggleBundle\Twig;
 
 use BestIt\FeatureToggleBundle\Manager\FeatureManagerInterface;
 use BestIt\FeatureToggleBundle\Twig\ToggleExtension;
@@ -10,7 +10,7 @@ use PHPUnit\Framework\TestCase;
  * Class ToggleExtensionTest
  *
  * @author Michel Chowanski <chowanski@bestit-online.de>
- * @package BestIt\FeatureToggleBundle\Tests\Twig
+ * @package Tests\BestIt\FeatureToggleBundle\Twig
  */
 class ToggleExtensionTest extends TestCase
 {
@@ -42,5 +42,16 @@ class ToggleExtensionTest extends TestCase
             ->willReturn(true);
 
         static::assertEquals(true, $extension->isActive('feature_foo'));
+    }
+
+    /**
+     * Test get name
+     *
+     * @return void
+     */
+    public function testGetName()
+    {
+        $extension = new ToggleExtension($this->createMock(FeatureManagerInterface::class));
+        static::assertEquals('best_it_feature_toggle.twig.toggle_extension', $extension->getName());
     }
 }

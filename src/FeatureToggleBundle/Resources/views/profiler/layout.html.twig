@@ -1,10 +1,10 @@
 {% extends 'WebProfilerBundle:Profiler:layout.html.twig' %}
 
 {% block toolbar %}
-    {% if collector.activeFeatures|length > 0 %}
+    {% if collector.features.all|length > 0 %}
         {% set icon %}
             <div class="sf-toolbar-icon">
-                <span class="sf-toolbar-value">{{ collector.activeFeatures|length }}</span>
+                <span class="sf-toolbar-value">{{ collector.features.all|length }}</span>
                 <span class="sf-toolbar-label"> Features</span>
             </div>
         {% endset %}
@@ -14,29 +14,33 @@
 {% endblock %}
 
 {% block menu %}
-    <span class="label {%- if collector.activeFeatures|length == 0 %} disabled{% endif %}">
+    <span class="label {%- if collector.features.all|length == 0 %} disabled{% endif %}">
         <strong>Features</strong>
-        {% if collector.activeFeatures|length > 0 %}
+        {% if collector.features|length > 0 %}
             <span class="count">
-                <span>{{ collector.activeFeatures|length }}</span>
+                <span>{{ collector.features.all|length }}</span>
             </span>
         {% endif %}
     </span>
 {% endblock %}
 
 {% block panel %}
-    <h2>Active features</h2>
+    <h2>Features</h2>
     <table>
         <thead>
         <tr>
             <th class="col">Feature name</th>
-            <th class="col">Activate by</th>
+            <th class="col">Is active</th>
+            <th class="col">Stash</th>
+            <th class="col">Context</th>
         </tr>
         </thead>
-        {% for name, stashes in collector.activeFeatures %}
+        {% for stack in collector.features %}
             <tr>
-                <td>{{ name }}</td>
-                <td>{{ stashes|join(', ') }}</td>
+                <td>{{ stack.featureName }}</td>
+                <td>{{ stack.active ? 'true' : 'false' }}</td>
+                <td>{{ stack.stashName }}</td>
+                <td>{{ stack.context.all|json_encode }}</td>
             </tr>
         {% endfor %}
     </table>

@@ -3,6 +3,7 @@
 namespace BestIt\FeatureToggleBundle\Twig;
 
 use BestIt\FeatureToggleBundle\Manager\FeatureManagerInterface;
+use BestIt\FeatureToggleBundle\Model\Context;
 use Twig_Extension;
 use Twig_SimpleFunction;
 use Twig_SimpleTest;
@@ -36,12 +37,18 @@ class ToggleExtension extends Twig_Extension
      * Is feature name active
      *
      * @param string $name
+     * @param array $contextValues
      *
-     * @return boolean
+     * @return bool
      */
-    public function isActive($name): bool
+    public function isActive($name, array $contextValues = []): bool
     {
-        return $this->manager->isActive($name);
+        $context = new Context();
+        foreach ($contextValues as $contextKey => $contextValue) {
+            $context->add($contextKey, $contextValue);
+        }
+
+        return $this->manager->isActive($name, $context);
     }
 
     /**

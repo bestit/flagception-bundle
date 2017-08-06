@@ -1,6 +1,6 @@
 <?php
 
-namespace BestIt\FeatureToggleBundle\Tests\Model;
+namespace Tests\BestIt\FeatureToggleBundle\Model;
 
 use BestIt\FeatureToggleBundle\Model\Feature;
 use PHPUnit\Framework\TestCase;
@@ -9,7 +9,7 @@ use PHPUnit\Framework\TestCase;
  * Class FeatureTest
  *
  * @author Michel Chowanski <chowanski@bestit-online.de>
- * @package BestIt\FeatureToggleBundle\Tests\Model
+ * @package Tests\BestIt\FeatureToggleBundle\Model
  */
 class FeatureTest extends TestCase
 {

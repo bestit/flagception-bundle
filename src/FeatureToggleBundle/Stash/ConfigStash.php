@@ -2,6 +2,8 @@
 
 namespace BestIt\FeatureToggleBundle\Stash;
 
+use BestIt\FeatureToggleBundle\Model\Context;
+
 /**
  * Class ConfigStash
  *
@@ -26,22 +28,23 @@ class ConfigStash implements StashInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
-    public function getActiveFeatures(): array
+    public function isActive(string $name, Context $context): bool
     {
-        return $this->features;
+        return $this->features[$name] ?? false;
     }
 
     /**
      * Add active feature
      *
      * @param string $feature
+     * @param bool $isActive
      *
      * @return void
      */
-    public function add(string $feature)
+    public function add(string $feature, bool $isActive)
     {
-        $this->features[] = $feature;
+        $this->features[$feature] = $isActive;
     }
 }

@@ -39,6 +39,18 @@ class Configuration implements ConfigurationInterface
                         ->scalarNode('name')->defaultValue('best_it_feature_toggle')->end()
                     ->end()
                 ->end()
+                ->arrayNode('annotation')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->booleanNode('active')->defaultFalse()->end()
+                    ->end()
+                ->end()
+                ->arrayNode('routing_metadata')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->booleanNode('active')->defaultFalse()->end()
+                    ->end()
+                ->end()
             ->end();
 
         return $treeBuilder;

@@ -1,6 +1,6 @@
 <?php
 
-namespace BestIt\FeatureToggleBundle\Tests\DependencyInjection\Test;
+namespace Tests\BestIt\FeatureToggleBundle\DependencyInjection\Test;
 
 use BestIt\FeatureToggleBundle\DependencyInjection\CompilerPass\StashPass;
 use PHPUnit\Framework\TestCase;
@@ -12,7 +12,7 @@ use Symfony\Component\DependencyInjection\Reference;
  * Class StashPassTest
  *
  * @author Michel Chowanski <chowanski@bestit-online.de>
- * @package BestIt\FeatureToggleBundle\Tests\DependencyInjection\Test
+ * @package Tests\BestIt\FeatureToggleBundle\DependencyInjection\Test
  */
 class StashPassTest extends TestCase
 {

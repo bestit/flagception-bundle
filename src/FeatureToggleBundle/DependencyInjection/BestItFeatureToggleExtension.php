@@ -2,11 +2,8 @@
 
 namespace BestIt\FeatureToggleBundle\DependencyInjection;
 
-use BestIt\FeatureToggleBundle\Stash\CookieStash;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
-use Symfony\Component\DependencyInjection\Definition;
-use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader;
 
@@ -26,6 +23,12 @@ class BestItFeatureToggleExtension extends Extension
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
+        // Add parameters
+        $container->setParameter(
+            'best_it_feature_toggle.config.cookie_stash_name',
+            $config['cookie_stash']['name']
+        );
+
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.yml');
 
@@ -38,15 +41,18 @@ class BestItFeatureToggleExtension extends Extension
         }
 
         // Enable / disable cookie stash
-        if ($config['cookie_stash']['active']) {
-            $definition = new Definition(
-                CookieStash::class,
-                [new Reference('request_stack'), $config['cookie_stash']['name']]
-            );
+        if ($config['cookie_stash']['active'] === false) {
+            $container->removeDefinition('best_it_feature_toggle.stash.cookie_stash');
+        }
 
-            $definition->addTag('best_it_feature_toggle.stash', ['priority' => 255]);
+        // Enable / disable annotation subscriber
+        if ($config['annotation']['active'] === false) {
+            $container->removeDefinition('best_it_feature_toggle.listener.annotation_subscriber');
+        }
 
-            $container->setDefinition('best_it_feature_toggle.stash.cookie_stash', $definition);
+        // Enable / disable routing metadata subscriber
+        if ($config['routing_metadata']['active'] === false) {
+            $container->removeDefinition('best_it_feature_toggle.listener.routing_metadata_subscriber');
         }
 
         // Enable / disable annotation subscriber

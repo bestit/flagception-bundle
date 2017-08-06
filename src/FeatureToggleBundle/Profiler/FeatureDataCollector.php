@@ -2,8 +2,7 @@
 
 namespace BestIt\FeatureToggleBundle\Profiler;
 
-use BestIt\FeatureToggleBundle\Bag\StashBag;
-use BestIt\FeatureToggleBundle\Stash\StashInterface;
+use BestIt\FeatureToggleBundle\Bag\StackBag;
 use Exception;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,19 +17,20 @@ use Symfony\Component\HttpKernel\DataCollector\DataCollector;
 class FeatureDataCollector extends DataCollector
 {
     /**
-     * The stash bag
-     * @var StashBag
+     * The stack bag
+     *
+     * @var StackBag
      */
-    private $stashBag;
+    private $stackBag;
 
     /**
      * FeatureDataCollector constructor.
      *
-     * @param StashBag $stashBag
+     * @param StackBag $stackBag
      */
-    public function __construct(StashBag $stashBag)
+    public function __construct(StackBag $stackBag)
     {
-        $this->stashBag = $stashBag;
+        $this->stackBag = $stackBag;
     }
 
     /**
@@ -38,28 +38,19 @@ class FeatureDataCollector extends DataCollector
      */
     public function collect(Request $request, Response $response, Exception $exception = null)
     {
-        $features = [];
-
-        /** @var StashInterface $stash */
-        foreach ($this->stashBag as $stash) {
-            foreach ($stash->getActiveFeatures() as $feature) {
-                $features[$feature][] = $stash->getName();
-            }
-        }
-
         $this->data = [
-            'activeFeatures' => $features
+            'features' => $this->stackBag
         ];
     }
 
     /**
-     * Get active features and the stashes who activate this
+     * Get all features
      *
-     * @return array
+     * @return StackBag
      */
-    public function getActiveFeatures(): array
+    public function getFeatures(): StackBag
     {
-        return $this->data['activeFeatures'];
+        return $this->data['features'];
     }
 
     /**

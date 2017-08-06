@@ -2,6 +2,7 @@
 
 namespace BestIt\FeatureToggleBundle\Stash;
 
+use BestIt\FeatureToggleBundle\Model\Context;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -47,18 +48,18 @@ class CookieStash implements StashInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
-    public function getActiveFeatures(): array
+    public function isActive(string $name, Context $context): bool
     {
         if (!$request = $this->requestStack->getMasterRequest()) {
-            return [];
+            return false;
         }
 
         if (!$cookie = $request->cookies->get($this->cookieName)) {
-            return [];
+            return false;
         }
 
-        return array_map('trim', explode(',', $cookie));
+        return in_array($name, array_map('trim', explode(',', $cookie)), true);
     }
 }

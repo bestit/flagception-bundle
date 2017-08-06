@@ -1,6 +1,6 @@
 <?php
 
-namespace BestIt\FeatureToggleBundle\Tests\Exception;
+namespace Tests\BestIt\FeatureToggleBundle\Exception;
 
 use BestIt\FeatureToggleBundle\Exception\FeatureToggleException;
 use BestIt\FeatureToggleBundle\Exception\StashNotFoundException;
@@ -10,7 +10,7 @@ use PHPUnit\Framework\TestCase;
  * Class StashNotFoundExceptionTest
  *
  * @author Michel Chowanski <chowanski@bestit-online.de>
- * @package BestIt\FeatureToggleBundle\Tests\Exception
+ * @package Tests\BestIt\FeatureToggleBundle\Exception
  */
 class StashNotFoundExceptionTest extends TestCase
 {

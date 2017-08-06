@@ -1,6 +1,6 @@
 <?php
 
-namespace BestIt\FeatureToggleBundle\Tests\Bag;
+namespace Tests\BestIt\FeatureToggleBundle\Bag;
 
 use BestIt\FeatureToggleBundle\Bag\StashBag;
 use BestIt\FeatureToggleBundle\Exception\StashNotFoundException;
@@ -12,7 +12,7 @@ use Traversable;
  * Class StashBagTest
  *
  * @author Michel Chowanski <chowanski@bestit-online.de>
- * @package BestIt\FeatureToggleBundle\Tests\Bag
+ * @package Tests\BestIt\FeatureToggleBundle\Bag
  */
 class StashBagTest extends TestCase
 {

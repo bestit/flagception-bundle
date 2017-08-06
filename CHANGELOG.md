@@ -1,3 +1,23 @@
+## [Unreleased]
+### Added
+- Add events before and after feature is searched / requested @chowanski
+- Add optional context object for features (breaking change!) @chowanski
+- [#4] Add possibility for deactivate the annotation subscriber (default: false) @espendiller / @chowanski
+- [#5] Add new subscriber for activate features by routing metadata (default: false) @espendiller / @chowanski
+- Add 'isActive' method for stashes
+
+### Changed
+- Fix phpunit whitelist @chowanski
+- Stashes are now explicitly queried for the status of a feature and not every time for all features (breaking change!) @chowanski
+- Move tests to root 'tests' directory @chowanski
+- Profiler shows inactive features too @chowanski
+- Fix readme @chowanski
+- Change CookieStash separator from pipe '|' to comma ',' @chowanski
+
+### Removed
+- Remove 'getActiveFeatures' method for stashes @chowanski
+- Remove FeatureBag / features are now passed directly to ConfigStash @chowanski
+
 ## [1.0.4] - 2017-08-07
 ### Added
 - Configuration for enable / disable annotation check @espendiller / @chowanski

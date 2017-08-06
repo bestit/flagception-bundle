@@ -38,7 +38,7 @@ class AppKernel extends Kernel
         $bundles = array(
             // ...
 
-            \BestIt\FeatureToggleBundle\BestItFeatureToggleBundle(),
+            new BestIt\FeatureToggleBundle\BestItFeatureToggleBundle(),
         );
 
         // ...
@@ -57,9 +57,6 @@ All here defined features are saved in the `ConfigStash`.
 # config.yml
 
 best_it_feature_toggle:
-
-    # You have to set this option to true, if you want to use annotation (default is false)
-    use_annotation: true
 
     # Your Features for ConfigStash (optional you left it empty)
     features:      
@@ -85,7 +82,18 @@ best_it_feature_toggle:
                                      
         # Cookie name (default: best_it_feature_toggle)                             
         name: 'your_feature_toogle_name'
+        
+    # Use annotation? (optional)
+    annotation:
+    
+        # Enable controller annotation (default: false)
+        active: true
 
+    # Use routing metadata? (optional)
+    routing_metadata:
+    
+        # Enable routing metadata (default: false)
+        active: true
 ```
 
 Step 4: Stashes
@@ -98,7 +106,7 @@ Returns active features from your config.yml.
 
 __CookieStash__: 
 Returns active features from your current cookie. Example: If you set a cookie with the name `your_feature_toogle_name` and 
-the value `feature_abc|feature_456`, both features will be active - even if the features are inactive the config.
+the value `feature_abc,feature_456`, both features will be active - even if the features are inactive the config.
 
 
 You can add your own stash. Just implement the `StashInterface` and add the tag `best_it_feature_toggle.stash`. 
@@ -115,12 +123,44 @@ You can add the "priority" attribute to control which stash should be asked firs
             - { name: best_it_feature_toggle.stash, priority: 100 }
 ```
 
-Step 5: How to use
+Step 5: Context
 -------------------------
-Now you can control in twig, you services or in your controllers if a feature should be displayed or not. The controller will
-throw a 404 error if you access an non active feature.
+Maybe you need more than a simple true/false. For example, if you want to use A / B Testing or admins should always see the feature. 
+You can therefore specify an (optional) context object and specify any values there. In your stash, you can then query the values
+from the context object and activate the feature depending on the values contained.
 
-#### Controller usage (via route param - recommend)
+Example:
+```php
+# AdminStash.php
+
+class AdminStash implements StashInterface
+{
+    /**
+     * {@inheritdoc}
+     */
+    public function getName(): string
+    {
+        return 'admin';
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function isActive(string $name, Context $context): bool
+    {
+        return in_array('ROLE_ADMIN', $context->get('user_roles'), true);
+    }
+}
+```
+
+Step 6: How to use
+-------------------------
+Now you can control in twig, you services or in your controllers if a feature should be displayed or not. 
+The controller will throw a 404 error if you access an non active feature.
+
+#### Controller usage (via route metadata - recommend)
+Remember to activate this in your config. 
+
 ```php
 // src/AppBundle/Controller/BlogController.php
 namespace AppBundle\Controller;
@@ -178,7 +218,7 @@ or via xml
 ```
 
 #### Controller usage (with Annotation)
-Remember to activate this in your config. This has an perfomance issue. Better you the route param above.
+Remember to activate this in your config. This has an performance issue. Better use the route metadata above.
 
 ```php
 # FooController.php
@@ -216,6 +256,12 @@ or
     {# ... #}
 {% endif %}
 ```
+or with context
+```twig
+{% if feature('feature_123', {'role': 'ROLE_ADMIN'}) %}
+    {# ... #}
+{% endif %}
+```
 
 #### Service usage
 ```php
@@ -244,5 +290,23 @@ class FooService
         }
         // ...
     }
+    
+    // Optional, you can add context values
+    public function doAdmin()
+    {
+        // ...
+        $context = new Context();
+        $context->add('role', 'ROLE_ADMIN');
+        
+        if ($this->manager->isActive('feature_123', $context)) {
+            // ...
+        }
+        // ...
+    }
 }
 ```
+
+Step 7: Events
+-------------------------
+The bundle provides two events if a feature is requested. One before and after the feature was searched for in the stashes.
+The pre event is a good entry point to automatically inject certain values into the context object.

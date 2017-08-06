@@ -1,6 +1,6 @@
 <?php
 
-namespace BestIt\FeatureToggleBundle\Tests\DependencyInjection;
+namespace Tests\BestIt\FeatureToggleBundle\DependencyInjection;
 
 use BestIt\FeatureToggleBundle\DependencyInjection\BestItFeatureToggleExtension;
 use BestIt\FeatureToggleBundle\Stash\CookieStash;
@@ -12,7 +12,7 @@ use Symfony\Component\DependencyInjection\Reference;
  * Class BestItFeatureToggleExtensionTest
  *
  * @author Michel Chowanski <chowanski@bestit-online.de>
- * @package BestIt\FeatureToggleBundle\Tests\DependencyInjection
+ * @package Tests\BestIt\FeatureToggleBundle\DependencyInjection
  */
 class BestItFeatureToggleExtensionTest extends TestCase
 {
@@ -109,7 +109,7 @@ class BestItFeatureToggleExtensionTest extends TestCase
         $definition = $container->getDefinition('best_it_feature_toggle.stash.cookie_stash');
 
         static::assertEquals(CookieStash::class, $definition->getClass());
-        static::assertEquals([new Reference('request_stack'), 'foo-cookie'], $definition->getArguments());
+        static::assertEquals([new Reference('request_stack'), '%cookie_stash_name%'], $definition->getArguments());
         static::assertEquals(['best_it_feature_toggle.stash' => [['priority' => 255]]], $definition->getTags());
     }
 
