@@ -1,4 +1,4 @@
-## [Unreleased]
+## [1.0.4] - 2017-08-07
 ### Added
 - Configuration for enable / disable annotation check @espendiller / @chowanski
 - Add feature handling via route metadata @espendiller / @chowanski
