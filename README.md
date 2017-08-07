@@ -1,7 +1,7 @@
 # bestit/feature-toggle-bundle
 
 [![Total Downloads](https://poser.pugx.org/bestit/feature-toggle-bundle/downloads.png)](https://packagist.org/packages/bestit/feature-toggle-bundle)
-[![Latest Stable Version](https://poser.pugx.org/bestit/feature-toggle-bundle/v/stable.png)](https://packagist.org/packages/ebestit/feature-toggle-bundle)
+[![Latest Stable Version](https://poser.pugx.org/bestit/feature-toggle-bundle/v/stable.png)](https://packagist.org/packages/bestit/feature-toggle-bundle)
 
 The feature toggle bundle provide a very simple way to enable or disable parts of your code.
 
