@@ -83,7 +83,20 @@ class CookieStashTest extends TestCase
     public function testGetActiveFeatures()
     {
         $stash = new CookieStash($stack = new RequestStack(), 'foo-cookie');
-        $stack->push(new Request([], [], [], ['foo-cookie' => 'feature_123|feature_abc|feature_784']));
+        $stack->push(new Request([], [], [], ['foo-cookie' => 'feature_123,feature_abc,feature_784']));
+
+        static::assertEquals(['feature_123', 'feature_abc', 'feature_784'], $stash->getActiveFeatures());
+    }
+
+    /**
+     * Test get active features
+     *
+     * @return void
+     */
+    public function testGetActiveFeaturesWithTrimmedValues()
+    {
+        $stash = new CookieStash($stack = new RequestStack(), 'foo-cookie');
+        $stack->push(new Request([], [], [], ['foo-cookie' => 'feature_123, feature_abc, feature_784']));
 
         static::assertEquals(['feature_123', 'feature_abc', 'feature_784'], $stash->getActiveFeatures());
     }

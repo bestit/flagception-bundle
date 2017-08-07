@@ -1,7 +1,4 @@
 services:
-    best_it_feature_toggle.bag.feature_bag:
-        class: BestIt\FeatureToggleBundle\Bag\FeatureBag
-
     best_it_feature_toggle.bag.stash_bag:
         class: BestIt\FeatureToggleBundle\Bag\StashBag
 
@@ -27,8 +24,6 @@ services:
 
     best_it_feature_toggle.stash.config_stash:
         class: BestIt\FeatureToggleBundle\Stash\ConfigStash
-        arguments:
-            - '@best_it_feature_toggle.bag.feature_bag'
         tags:
             - { name: best_it_feature_toggle.stash, priority: 0 }
 
@@ -42,3 +37,9 @@ services:
                 template: '@BestItFeatureToggle/profiler/layout.html.twig'
                 id:       'best_it_feature_toggle.profiler.feature_data_collector'
         public: false
+
+    best_it_feature_toggle.listener.route_subscriber:
+        class: BestIt\FeatureToggleBundle\Listener\RouteSubscriber
+        arguments: ['@best_it_feature_toggle.manager.feature_manager']
+        tags:
+            - { name: kernel.event_subscriber }

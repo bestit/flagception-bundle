@@ -37,10 +37,8 @@ class FeatureManager implements FeatureManagerInterface
     {
         /** @var StashInterface $stash */
         foreach ($this->stashBag as $stash) {
-            foreach ($stash->getActiveFeatures() as $feature) {
-                if ($feature === $name) {
-                    return true;
-                }
+            if (in_array($name, $stash->getActiveFeatures(), true)) {
+                return true;
             }
         }
 

@@ -47,15 +47,8 @@ class BestItFeatureToggleExtensionTest extends TestCase
                     'feature_foo',
                     true
                 ]
-            ],
-            [
-                'add',
-                [
-                    'feature_bar',
-                    false
-                ]
             ]
-        ], $container->getDefinition('best_it_feature_toggle.bag.feature_bag')->getMethodCalls());
+        ], $container->getDefinition('best_it_feature_toggle.stash.config_stash')->getMethodCalls());
     }
 
     /**
@@ -118,5 +111,61 @@ class BestItFeatureToggleExtensionTest extends TestCase
         static::assertEquals(CookieStash::class, $definition->getClass());
         static::assertEquals([new Reference('request_stack'), 'foo-cookie'], $definition->getArguments());
         static::assertEquals(['best_it_feature_toggle.stash' => [['priority' => 255]]], $definition->getTags());
+    }
+
+    /**
+     * Test that annotation subscriber is disabled
+     *
+     * @return void
+     */
+    public function testAnnotationSubscriberDisabled()
+    {
+        $container = new ContainerBuilder();
+        $config = [
+            [
+                'features' => [
+                    'feature_foo' => [
+                        'active' => true
+                    ],
+                    'feature_bar' => [
+                        'active' => false
+                    ]
+                ]
+            ]
+        ];
+
+        $extension = new BestItFeatureToggleExtension();
+        $extension->load($config, $container);
+
+        static::assertFalse($container->hasDefinition('best_it_feature_toggle.listener.annotation_subscriber'));
+    }
+
+    /**
+     * Test that annotation subscriber is enabled
+     *
+     * @return void
+     */
+    public function testAnnotationSubscriberEnabled()
+    {
+        $container = new ContainerBuilder();
+        $config = [
+            [
+                'use_annotation' => true,
+                'features' => [
+                    'feature_foo' => [
+                        'active' => true
+                    ],
+                    'feature_bar' => [
+                        'active' => false
+                    ]
+                ]
+            ]
+        ];
+
+        $extension = new BestItFeatureToggleExtension();
+        $extension->load($config, $container);
+
+        $definition = $container->getDefinition('best_it_feature_toggle.listener.annotation_subscriber');
+        static::assertTrue($definition->hasTag('kernel.event_subscriber'));
     }
 }

@@ -2,9 +2,6 @@
 
 namespace BestIt\FeatureToggleBundle\Stash;
 
-use BestIt\FeatureToggleBundle\Bag\FeatureBag;
-use BestIt\FeatureToggleBundle\Model\Feature;
-
 /**
  * Class ConfigStash
  *
@@ -14,21 +11,11 @@ use BestIt\FeatureToggleBundle\Model\Feature;
 class ConfigStash implements StashInterface
 {
     /**
-     * The feature
+     * The features
      *
-     * @var FeatureBag
+     * @var array
      */
-    private $featureBag;
-
-    /**
-     * ConfigStash constructor.
-     *
-     * @param FeatureBag $featureBag
-     */
-    public function __construct(FeatureBag $featureBag)
-    {
-        $this->featureBag = $featureBag;
-    }
+    private $features = [];
 
     /**
      * {@inheritdoc}
@@ -43,12 +30,18 @@ class ConfigStash implements StashInterface
      */
     public function getActiveFeatures(): array
     {
-        $features = array_filter($this->featureBag->all(), function (Feature $feature) {
-            return $feature->isActive();
-        });
+        return $this->features;
+    }
 
-        return array_values(array_map(function (Feature $feature) {
-            return $feature->getName();
-        }, $features));
+    /**
+     * Add active feature
+     *
+     * @param string $feature
+     *
+     * @return void
+     */
+    public function add(string $feature)
+    {
+        $this->features[] = $feature;
     }
 }

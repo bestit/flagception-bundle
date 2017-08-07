@@ -2,7 +2,6 @@
 
 namespace BestIt\FeatureToggleBundle\Tests\Stash;
 
-use BestIt\FeatureToggleBundle\Bag\FeatureBag;
 use BestIt\FeatureToggleBundle\Stash\ConfigStash;
 use BestIt\FeatureToggleBundle\Stash\StashInterface;
 use PHPUnit\Framework\TestCase;
@@ -22,7 +21,7 @@ class ConfigStashTest extends TestCase
      */
     public function testImplementInterface()
     {
-        $stash = new ConfigStash($this->createMock(FeatureBag::class));
+        $stash = new ConfigStash();
         static::assertInstanceOf(StashInterface::class, $stash);
     }
 
@@ -33,7 +32,7 @@ class ConfigStashTest extends TestCase
      */
     public function testName()
     {
-        $stash = new ConfigStash($this->createMock(FeatureBag::class));
+        $stash = new ConfigStash();
         static::assertEquals('config', $stash->getName());
     }
 
@@ -44,14 +43,10 @@ class ConfigStashTest extends TestCase
      */
     public function testGetActiveFeatures()
     {
-        $bag = new FeatureBag();
-        $bag->add('feature_1', true);
-        $bag->add('feature_2', false);
-        $bag->add('feature_3', false);
-        $bag->add('feature_4', true);
-        $bag->add('feature_5', false);
+        $stash = new ConfigStash();
+        $stash->add('feature_1');
+        $stash->add('feature_4');
 
-        $stash = new ConfigStash($bag);
         static::assertEquals(['feature_1', 'feature_4'], $stash->getActiveFeatures());
     }
 }

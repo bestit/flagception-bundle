@@ -29,10 +29,12 @@ class BestItFeatureToggleExtension extends Extension
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.yml');
 
-        // Add features for config stasg
-        $bag = $container->getDefinition('best_it_feature_toggle.bag.feature_bag');
+        // Add features for config stash
+        $bag = $container->getDefinition('best_it_feature_toggle.stash.config_stash');
         foreach ($config['features'] as $name => $feature) {
-            $bag->addMethodCall('add', [$name, $feature['active']]);
+            if ($feature['active']) {
+                $bag->addMethodCall('add', [$name, $feature['active']]);
+            }
         }
 
         // Enable / disable cookie stash
@@ -45,6 +47,11 @@ class BestItFeatureToggleExtension extends Extension
             $definition->addTag('best_it_feature_toggle.stash', ['priority' => 255]);
 
             $container->setDefinition('best_it_feature_toggle.stash.cookie_stash', $definition);
+        }
+
+        // Enable / disable annotation subscriber
+        if (!$config['use_annotation']) {
+            $container->removeDefinition('best_it_feature_toggle.listener.annotation_subscriber');
         }
     }
 }

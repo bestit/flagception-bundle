@@ -58,6 +58,9 @@ All here defined features are saved in the `ConfigStash`.
 
 best_it_feature_toggle:
 
+    # You have to set this option to true, if you want to use annotation (default is false)
+    use_annotation: true
+
     # Your Features for ConfigStash (optional you left it empty)
     features:      
         
@@ -114,9 +117,69 @@ You can add the "priority" attribute to control which stash should be asked firs
 
 Step 5: How to use
 -------------------------
-Now you can control in twig, you services or in your controllers if a feature should be displayed or not.
+Now you can control in twig, you services or in your controllers if a feature should be displayed or not. The controller will
+throw a 404 error if you access an non active feature.
 
-#### Controller usage
+#### Controller usage (via route param - recommend)
+```php
+// src/AppBundle/Controller/BlogController.php
+namespace AppBundle\Controller;
+
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+
+class BlogController extends Controller
+{
+    /**
+     * @Route("/blog/{page}", name="blog_list", defaults={"_feature": "feature_123"})
+     */
+    public function listAction($page)
+    {
+        // ...
+    }
+
+    /**
+     * @Route("/blog/{slug}", name="blog_show")
+     */
+    public function showAction($slug)
+    {
+        // ...
+    }
+}
+```
+or via yml
+
+```yml
+# app/config/routing.yml
+blog_list:
+    path:      /blog/{page}
+    defaults:  { _controller: AppBundle:Blog:list, _feature: 'feature_789' }  
+
+blog_show:
+```
+
+or via xml
+
+```xml
+<!-- app/config/routing.xml -->
+<?xml version="1.0" encoding="UTF-8" ?>
+<routes xmlns="http://symfony.com/schema/routing"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/routing
+        http://symfony.com/schema/routing/routing-1.0.xsd">
+
+    <route id="blog_list" path="/blog/{page}">
+        <default key="_controller">AppBundle:Blog:list</default>
+        <default key="_feature">feature_123</requirement>
+    </route>
+
+    <!-- ... -->
+</routes>
+```
+
+#### Controller usage (with Annotation)
+Remember to activate this in your config. This has an perfomance issue. Better you the route param above.
+
 ```php
 # FooController.php
 
