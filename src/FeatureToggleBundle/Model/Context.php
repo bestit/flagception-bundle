@@ -72,4 +72,16 @@ class Context
     {
         return $this->storage;
     }
+
+    /**
+     * Has given context value
+     *
+     * @param string $name
+     *
+     * @return bool
+     */
+    public function has(string $name): bool
+    {
+        return array_key_exists($name, $this->storage) && isset($this->storage[$name]);
+    }
 }

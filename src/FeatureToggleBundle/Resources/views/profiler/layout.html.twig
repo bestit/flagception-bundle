@@ -1,10 +1,10 @@
 {% extends 'WebProfilerBundle:Profiler:layout.html.twig' %}
 
 {% block toolbar %}
-    {% if collector.features.all|length > 0 %}
+    {% if collector.grouped|length > 0 %}
         {% set icon %}
             <div class="sf-toolbar-icon">
-                <span class="sf-toolbar-value">{{ collector.features.all|length }}</span>
+                <span class="sf-toolbar-value">{{ collector.grouped|length }}</span>
                 <span class="sf-toolbar-label"> Features</span>
             </div>
         {% endset %}
@@ -14,33 +14,55 @@
 {% endblock %}
 
 {% block menu %}
-    <span class="label {%- if collector.features.all|length == 0 %} disabled{% endif %}">
+    <span class="label {%- if collector.grouped|length == 0 %} disabled{% endif %}">
         <strong>Features</strong>
-        {% if collector.features|length > 0 %}
+        {% if collector.grouped|length > 0 %}
             <span class="count">
-                <span>{{ collector.features.all|length }}</span>
+                <span>{{ collector.grouped|length }}</span>
             </span>
         {% endif %}
     </span>
 {% endblock %}
 
 {% block panel %}
-    <h2>Features</h2>
+    <h2>Feature Dashboard</h2>
     <table>
         <thead>
         <tr>
             <th class="col">Feature name</th>
-            <th class="col">Is active</th>
+            <th class="col">Amount requests</th>
+            <th class="col">Amount active</th>
+            <th class="col">Amount inactive</th>
+            <th class="col">Stashes</th>
+        </tr>
+        </thead>
+        {% for group in collector.grouped %}
+            <tr>
+                <td>{{ group.featureName }}</td>
+                <td>{{ group.amountRequests }}</td>
+                <td>{{ group.amountActive }}</td>
+                <td>{{ group.amountInactive }}</td>
+                <td>{{ group.stashes|join(', ') }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+
+    <h2>Feature Toggle Log</h2>
+    <table>
+        <thead>
+        <tr>
+            <th class="col">Feature name</th>
+            <th class="col">Active</th>
             <th class="col">Stash</th>
             <th class="col">Context</th>
         </tr>
         </thead>
-        {% for stack in collector.features %}
+        {% for stack in collector.stack %}
             <tr>
                 <td>{{ stack.featureName }}</td>
                 <td>{{ stack.active ? 'true' : 'false' }}</td>
                 <td>{{ stack.stashName }}</td>
-                <td>{{ stack.context.all|json_encode }}</td>
+                <td>{{ dump(stack.context.all) }}</td>
             </tr>
         {% endfor %}
     </table>

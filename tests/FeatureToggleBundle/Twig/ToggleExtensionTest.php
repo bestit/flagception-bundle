@@ -3,6 +3,7 @@
 namespace Tests\BestIt\FeatureToggleBundle\Twig;
 
 use BestIt\FeatureToggleBundle\Manager\FeatureManagerInterface;
+use BestIt\FeatureToggleBundle\Model\Context;
 use BestIt\FeatureToggleBundle\Twig\ToggleExtension;
 use PHPUnit\Framework\TestCase;
 
@@ -42,6 +43,26 @@ class ToggleExtensionTest extends TestCase
             ->willReturn(true);
 
         static::assertEquals(true, $extension->isActive('feature_foo'));
+    }
+
+    /**
+     * Test is active with context
+     *
+     * @return void
+     */
+    public function testIsActiveWithContext()
+    {
+        $extension = new ToggleExtension($manager = $this->createMock(FeatureManagerInterface::class));
+
+        $context = new Context();
+        $context->add('role', 'ROLE_ADMIN');
+
+        $manager
+            ->method('isActive')
+            ->with('feature_foo', $context)
+            ->willReturn(true);
+
+        static::assertEquals(true, $extension->isActive('feature_foo', ['role' => 'ROLE_ADMIN']));
     }
 
     /**

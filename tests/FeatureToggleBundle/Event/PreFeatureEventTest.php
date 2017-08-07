@@ -2,6 +2,7 @@
 
 namespace Tests\BestIt\FeatureToggleBundle\Event;
 
+use BestIt\FeatureToggleBundle\Event\FeatureEventInterface;
 use BestIt\FeatureToggleBundle\Event\PreFeatureEvent;
 use BestIt\FeatureToggleBundle\Model\Context;
 use PHPUnit\Framework\TestCase;
@@ -25,6 +26,18 @@ class PreFeatureEventTest extends TestCase
         $event = new PreFeatureEvent('feature_abc', new Context());
 
         static::assertInstanceOf(Event::class, $event);
+    }
+
+    /**
+     * Test implement event
+     *
+     * @return void
+     */
+    public function testImplementEvent()
+    {
+        $event = new PreFeatureEvent('feature_abc', new Context());
+
+        static::assertInstanceOf(FeatureEventInterface::class, $event);
     }
 
     /**

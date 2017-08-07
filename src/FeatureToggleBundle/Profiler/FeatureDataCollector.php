@@ -3,6 +3,7 @@
 namespace BestIt\FeatureToggleBundle\Profiler;
 
 use BestIt\FeatureToggleBundle\Bag\StackBag;
+use BestIt\FeatureToggleBundle\Model\StackGroup;
 use Exception;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -38,19 +39,48 @@ class FeatureDataCollector extends DataCollector
      */
     public function collect(Request $request, Response $response, Exception $exception = null)
     {
+        $grouped = [];
+
+        foreach ($this->stackBag->all() as $stack) {
+            $group = $grouped[$stack->getFeatureName()] ?? new StackGroup($stack->getFeatureName());
+
+            if ($stashName = $stack->getStashName()) {
+                $group->addStash($stashName);
+            }
+
+            if ($stack->isActive()) {
+                $group->increaseActive();
+            } else {
+                $group->increaseInactive();
+            }
+
+            $grouped[$stack->getFeatureName()] = $group;
+        }
+
         $this->data = [
-            'features' => $this->stackBag
+            'stack' => $this->stackBag,
+            'grouped' => $grouped
         ];
     }
 
     /**
-     * Get all features
+     * Get all stacks
      *
      * @return StackBag
      */
-    public function getFeatures(): StackBag
+    public function getStack(): StackBag
     {
-        return $this->data['features'];
+        return $this->data['stack'];
+    }
+
+    /**
+     * Get all grouped stacks / features
+     *
+     * @return StackGroup[]
+     */
+    public function getGrouped(): array
+    {
+        return $this->data['grouped'];
     }
 
     /**

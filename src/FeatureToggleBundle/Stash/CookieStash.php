@@ -28,15 +28,24 @@ class CookieStash implements StashInterface
     private $cookieName;
 
     /**
+     * Separator for multiple values in cookie
+     *
+     * @var string
+     */
+    private $cookieSeparator;
+
+    /**
      * CookieStash constructor.
      *
      * @param RequestStack $requestStack
      * @param string $cookieName
+     * @param string $cookieSeparator
      */
-    public function __construct(RequestStack $requestStack, string $cookieName)
+    public function __construct(RequestStack $requestStack, string $cookieName, string $cookieSeparator)
     {
         $this->requestStack = $requestStack;
         $this->cookieName = $cookieName;
+        $this->cookieSeparator = $cookieSeparator;
     }
 
     /**
@@ -60,6 +69,6 @@ class CookieStash implements StashInterface
             return false;
         }
 
-        return in_array($name, array_map('trim', explode(',', $cookie)), true);
+        return in_array($name, array_map('trim', explode($this->cookieSeparator, $cookie)), true);
     }
 }

@@ -59,8 +59,6 @@ class StackCollectorSubscriber implements EventSubscriberInterface
             $event->getStashName()
         );
 
-        if (!$this->stackBag->has($stack)) {
-            $this->stackBag->add($stack);
-        }
+        $this->stackBag->add($stack);
     }
 }

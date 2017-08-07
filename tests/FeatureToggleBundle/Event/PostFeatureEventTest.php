@@ -2,6 +2,7 @@
 
 namespace Tests\BestIt\FeatureToggleBundle\Event;
 
+use BestIt\FeatureToggleBundle\Event\FeatureEventInterface;
 use BestIt\FeatureToggleBundle\Event\PostFeatureEvent;
 use BestIt\FeatureToggleBundle\Model\Context;
 use PHPUnit\Framework\TestCase;
@@ -25,6 +26,18 @@ class PostFeatureEventTest extends TestCase
         $event = new PostFeatureEvent('feature_abc', true, new Context());
 
         static::assertInstanceOf(Event::class, $event);
+    }
+
+    /**
+     * Test implement event
+     *
+     * @return void
+     */
+    public function testImplementEvent()
+    {
+        $event = new PostFeatureEvent('feature_abc', true, new Context());
+
+        static::assertInstanceOf(FeatureEventInterface::class, $event);
     }
 
     /**

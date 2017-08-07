@@ -1,4 +1,7 @@
 services:
+    best_it_feature_toggle.expression_language:
+        class: Symfony\Component\ExpressionLanguage\ExpressionLanguage
+
     best_it_feature_toggle.bag.stash_bag:
         class: BestIt\FeatureToggleBundle\Bag\StashBag
 
@@ -26,6 +29,8 @@ services:
 
     best_it_feature_toggle.stash.config_stash:
         class: BestIt\FeatureToggleBundle\Stash\ConfigStash
+        arguments:
+            - '@best_it_feature_toggle.expression_language'
         tags:
             - { name: best_it_feature_toggle.stash, priority: 0 }
 
@@ -34,7 +39,8 @@ services:
         class: BestIt\FeatureToggleBundle\Stash\CookieStash
         arguments:
             - '@request_stack'
-            - '%cookie_stash_name%'
+            - '%best_it_feature_toggle.config.cookie_stash_name%'
+            - '%best_it_feature_toggle.config.cookie_stash_separator%'
         tags:
             - { name: best_it_feature_toggle.stash, priority: 255 }
 

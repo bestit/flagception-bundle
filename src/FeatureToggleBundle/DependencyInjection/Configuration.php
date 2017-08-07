@@ -23,12 +23,14 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
-                ->booleanNode('use_annotation')->defaultFalse()->end()
                 ->arrayNode('features')
                     ->useAttributeAsKey('name')
                     ->prototype('array')
                         ->children()
                             ->booleanNode('active')->defaultFalse()->end()
+                            ->arrayNode('constraints')
+                                ->prototype('scalar')->end()
+                            ->end()
                         ->end()
                     ->end()
                 ->end()
@@ -37,6 +39,7 @@ class Configuration implements ConfigurationInterface
                     ->children()
                         ->booleanNode('active')->defaultFalse()->end()
                         ->scalarNode('name')->defaultValue('best_it_feature_toggle')->end()
+                        ->scalarNode('separator')->defaultValue(',')->end()
                     ->end()
                 ->end()
                 ->arrayNode('annotation')

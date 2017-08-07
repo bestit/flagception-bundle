@@ -34,24 +34,6 @@ class StackBag implements IteratorAggregate
     }
 
     /**
-     * Check if identical stack already exists
-     *
-     * @param Stack $stack
-     *
-     * @return bool
-     */
-    public function has(Stack $stack): bool
-    {
-        foreach ($this->bag as $item) {
-            if ($item == $stack) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function getIterator()

@@ -11,7 +11,7 @@ use Symfony\Component\EventDispatcher\Event;
  * @author Michel Chowanski <chowanski@bestit-online.de>
  * @package BestIt\FeatureToggleBundle\Event
  */
-class PreFeatureEvent extends Event
+class PreFeatureEvent extends Event implements FeatureEventInterface
 {
     /**
      * The feature name

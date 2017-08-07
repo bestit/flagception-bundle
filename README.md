@@ -64,11 +64,16 @@ best_it_feature_toggle:
         # Feature name as key
         feature_123:
         
-            # Flag if inactive or active (default: inactive)
+            # Default flag if inactive or active (default: inactive)
             active: true
             
         feature_abc:
             active: false
+            
+            # Optional further constraints which should return true (see Step 5)
+            constraints:
+                    - '"ROLE_ADMIN" in context.get("user_role", [])'
+                    - 'context.get("user_id") === 12'
         feature_456:
             active: false
         feature_789:
@@ -82,6 +87,9 @@ best_it_feature_toggle:
                                      
         # Cookie name (default: best_it_feature_toggle)                             
         name: 'your_feature_toogle_name'
+        
+        # Set feature separator (default: ,)
+        separator: ';'
         
     # Use annotation? (optional)
     annotation:
@@ -98,16 +106,16 @@ best_it_feature_toggle:
 
 Step 4: Stashes
 -------------------------
-You do not need to set all features in your config.yml. You can use stash services which return active features. This bundle 
+You do not need to set all features in your config.yml. You can use stash services for checking if a feature is active or not. This bundle 
 include two stashes:
 
 __ConfigStash__:
-Returns active features from your config.yml.
+Check the active state against your config.yml.
 
 __CookieStash__: 
-Returns active features from your current cookie. Example: If you set a cookie with the name `your_feature_toogle_name` and 
+Check the active state against your cookie. Example: If you set a cookie with the name `your_feature_toogle_name` and 
 the value `feature_abc,feature_456`, both features will be active - even if the features are inactive the config.
-
+You can define the cookie name and separator in your config.yml.
 
 You can add your own stash. Just implement the `StashInterface` and add the tag `best_it_feature_toggle.stash`. 
 You can add the "priority" attribute to control which stash should be asked first (high to low). Example:
@@ -126,10 +134,11 @@ You can add the "priority" attribute to control which stash should be asked firs
 Step 5: Context
 -------------------------
 Maybe you need more than a simple true/false. For example, if you want to use A / B Testing or admins should always see the feature. 
-You can therefore specify an (optional) context object and specify any values there. In your stash, you can then query the values
-from the context object and activate the feature depending on the values contained.
+You can therefore specify an (optional) context object and specify any values there. In your stash, you can activate the feature 
+depending on the given context values. You can set context values by the isActive method or globally via event (see step 6 and 7).
+In most cases, you should set context values globally (eg. the user group).
 
-Example:
+Example to use context object in stash:
 ```php
 # AdminStash.php
 
@@ -153,9 +162,32 @@ class AdminStash implements StashInterface
 }
 ```
 
+
+#### Use context and constraints with ConfigStash
+You can define custom constraints in your config yml which will be checked by the ConfigStash if the default value is false.
+Example from above:
+
+```yml
+# config.yml
+
+best_it_feature_toggle:
+    features:      
+        feature_abc:
+            active: false
+            constraints:
+                    - '"ROLE_ADMIN" in context.get("user_role", [])'
+                    - 'context.get("user_id") === 12'
+```
+
+In this example, the default active state is false. So the ConfgStash execute and evaluate all given constraints until one return true.
+It use the [standard symfony expression language](https://symfony.com/doc/current/components/expression_language/syntax.html). You can access the context values by the get method with an optional second default value.
+The expression must return true - all other returns will be interpreted as false.
+
+The expression above explained: If the user_role is 'ROLE_ADMIN' or the user_id is 12, then the feature is active - otherwise inactive. 
+
 Step 6: How to use
 -------------------------
-Now you can control in twig, you services or in your controllers if a feature should be displayed or not. 
+Now you can control in twig, in your services or in your controllers if a feature should be displayed or not. 
 The controller will throw a 404 error if you access an non active feature.
 
 #### Controller usage (via route metadata - recommend)

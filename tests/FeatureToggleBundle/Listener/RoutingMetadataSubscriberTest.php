@@ -1,8 +1,8 @@
 <?php
 
-namespace BestIt\FeatureToggleBundle\Tests\Listener;
+namespace Tests\BestIt\FeatureToggleBundle\Listener;
 
-use BestIt\FeatureToggleBundle\Listener\RouteSubscriber;
+use BestIt\FeatureToggleBundle\Listener\RoutingMetadataSubscriber;
 use BestIt\FeatureToggleBundle\Manager\FeatureManagerInterface;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -12,12 +12,12 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
- * Class RouteSubscriberTest
+ * Class RoutingMetadataSubscriberTest
  *
  * @author Michel Chowanski <chowanski@bestit-online.de>
- * @package BestIt\FeatureToggleBundle\Tests\Listener
+ * @package Tests\BestIt\FeatureToggleBundle\Listener
  */
-class RouteSubscriberTest extends TestCase
+class RoutingMetadataSubscriberTest extends TestCase
 {
     /**
      * Test implement interface
@@ -26,7 +26,7 @@ class RouteSubscriberTest extends TestCase
      */
     public function testImplementInterface()
     {
-        $subscriber = new RouteSubscriber($this->createMock(FeatureManagerInterface::class));
+        $subscriber = new RoutingMetadataSubscriber($this->createMock(FeatureManagerInterface::class));
         static::assertInstanceOf(EventSubscriberInterface::class, $subscriber);
     }
 
@@ -34,7 +34,7 @@ class RouteSubscriberTest extends TestCase
     {
         static::assertEquals(
             [KernelEvents::CONTROLLER => 'onKernelController'],
-            RouteSubscriber::getSubscribedEvents()
+            RoutingMetadataSubscriber::getSubscribedEvents()
         );
     }
 
@@ -57,7 +57,7 @@ class RouteSubscriberTest extends TestCase
             ->expects(static::never())
             ->method('isActive');
 
-        $subscriber = new RouteSubscriber($manager);
+        $subscriber = new RoutingMetadataSubscriber($manager);
         $subscriber->onKernelController($event);
     }
 
@@ -84,7 +84,7 @@ class RouteSubscriberTest extends TestCase
             ->with('feature_abc')
             ->willReturn(false);
 
-        $subscriber = new RouteSubscriber($manager);
+        $subscriber = new RoutingMetadataSubscriber($manager);
         $subscriber->onKernelController($event);
     }
 
@@ -109,7 +109,7 @@ class RouteSubscriberTest extends TestCase
             ->with('feature_abc')
             ->willReturn(true);
 
-        $subscriber = new RouteSubscriber($manager);
+        $subscriber = new RoutingMetadataSubscriber($manager);
         $subscriber->onKernelController($event);
     }
 }

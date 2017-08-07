@@ -1,6 +1,7 @@
 <?php
 
 namespace BestIt\FeatureToggleBundle\Event;
+
 use BestIt\FeatureToggleBundle\Model\Context;
 use Symfony\Component\EventDispatcher\Event;
 
@@ -10,7 +11,7 @@ use Symfony\Component\EventDispatcher\Event;
  * @author Michel Chowanski <chowanski@bestit-online.de>
  * @package BestIt\FeatureToggleBundle\Event
  */
-class PostFeatureEvent extends Event
+class PostFeatureEvent extends Event implements FeatureEventInterface
 {
     /**
      * The feature name

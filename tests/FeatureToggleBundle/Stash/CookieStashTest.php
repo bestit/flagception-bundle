@@ -24,7 +24,7 @@ class CookieStashTest extends TestCase
      */
     public function testImplementInterface()
     {
-        $stash = new CookieStash($this->createMock(RequestStack::class), 'foo-cookie');
+        $stash = new CookieStash($this->createMock(RequestStack::class), 'foo-cookie', ',');
         static::assertInstanceOf(StashInterface::class, $stash);
     }
 
@@ -35,7 +35,7 @@ class CookieStashTest extends TestCase
      */
     public function testName()
     {
-        $stash = new CookieStash($this->createMock(RequestStack::class), 'foo-cookie');
+        $stash = new CookieStash($this->createMock(RequestStack::class), 'foo-cookie', ',');
         static::assertEquals('cookie', $stash->getName());
     }
 
@@ -46,7 +46,7 @@ class CookieStashTest extends TestCase
      */
     public function testIsActiveWithoutRequest()
     {
-        $stash = new CookieStash(new RequestStack(), 'foo-cookie');
+        $stash = new CookieStash(new RequestStack(), 'foo-cookie', ',');
         static::assertFalse($stash->isActive('feature_123', new Context()));
     }
 
@@ -57,7 +57,7 @@ class CookieStashTest extends TestCase
      */
     public function testIsActiveWithoutCookie()
     {
-        $stash = new CookieStash($stack = new RequestStack(), 'foo-cookie');
+        $stash = new CookieStash($stack = new RequestStack(), 'foo-cookie', ',');
         $stack->push(new Request());
 
         static::assertFalse($stash->isActive('feature_123', new Context()));
@@ -70,7 +70,7 @@ class CookieStashTest extends TestCase
      */
     public function testIsActiveFeature()
     {
-        $stash = new CookieStash($stack = new RequestStack(), 'foo-cookie');
+        $stash = new CookieStash($stack = new RequestStack(), 'foo-cookie', ',');
         $stack->push(new Request([], [], [], ['foo-cookie' => 'feature_123']));
 
         static::assertTrue($stash->isActive('feature_123', new Context()));
@@ -83,8 +83,23 @@ class CookieStashTest extends TestCase
      */
     public function testGetActiveFeatures()
     {
-        $stash = new CookieStash($stack = new RequestStack(), 'foo-cookie');
+        $stash = new CookieStash($stack = new RequestStack(), 'foo-cookie', ',');
         $stack->push(new Request([], [], [], ['foo-cookie' => 'feature_123,feature_abc,feature_784']));
+
+        static::assertTrue($stash->isActive('feature_123', new Context()));
+        static::assertTrue($stash->isActive('feature_784', new Context()));
+        static::assertFalse($stash->isActive('feature_xyz', new Context()));
+    }
+
+    /**
+     * Test is active with multiple features with whitespaces
+     *
+     * @return void
+     */
+    public function testGetActiveFeaturesWithWhitespaces()
+    {
+        $stash = new CookieStash($stack = new RequestStack(), 'foo-cookie', ',');
+        $stack->push(new Request([], [], [], ['foo-cookie' => 'feature_123,    feature_abc, feature_784']));
 
         static::assertTrue($stash->isActive('feature_123', new Context()));
         static::assertTrue($stash->isActive('feature_784', new Context()));

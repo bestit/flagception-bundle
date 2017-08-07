@@ -124,4 +124,18 @@ class ContextTest extends TestCase
 
         static::assertEquals(['foo' => 'bar', 'role' => 'ROLE_ADMIN'], $context->all());
     }
+
+    /**
+     * Test has context value
+     *
+     * @return void
+     */
+    public function testHas()
+    {
+        $context = new Context();
+        static::assertFalse($context->has('foo'));
+
+        $context->add('foo', 'bar');
+        static::assertTrue($context->has('foo'));
+    }
 }
