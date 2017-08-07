@@ -1,3 +1,11 @@
+## [Unreleased]
+### Added
+- Configuration for enable / disable annotation check @espendiller / @chowanski
+- Add feature handling via route metadata @espendiller / @chowanski
+
+### Changed
+- Remove feature bag and move logic to ConfigStash @espendiller / @chowanski
+
 ## [1.0.3] - 2017-08-03
 ### Added
 - Add error message for annotation subscriber if feature is inactive @chowanski

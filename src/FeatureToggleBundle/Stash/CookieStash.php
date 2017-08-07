@@ -59,6 +59,6 @@ class CookieStash implements StashInterface
             return [];
         }
 
-        return explode('|', $cookie);
+        return array_map('trim', explode(',', $cookie));
     }
 }

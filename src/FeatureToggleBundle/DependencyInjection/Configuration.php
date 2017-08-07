@@ -23,6 +23,7 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
+                ->booleanNode('use_annotation')->defaultFalse()->end()
                 ->arrayNode('features')
                     ->useAttributeAsKey('name')
                     ->prototype('array')
