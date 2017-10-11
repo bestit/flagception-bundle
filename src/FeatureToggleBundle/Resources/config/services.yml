@@ -1,4 +1,7 @@
 services:
+    best_it_feature_toggle.expression_language:
+        class: Symfony\Component\ExpressionLanguage\ExpressionLanguage
+
     best_it_feature_toggle.bag.stash_bag:
         class: BestIt\FeatureToggleBundle\Bag\StashBag
 
@@ -6,6 +9,7 @@ services:
         class: BestIt\FeatureToggleBundle\Manager\FeatureManager
         arguments:
             - '@best_it_feature_toggle.bag.stash_bag'
+            - '@event_dispatcher'
 
     best_it_feature_toggle.twig.toggle_extension:
         class: BestIt\FeatureToggleBundle\Twig\ToggleExtension
@@ -14,6 +18,7 @@ services:
         tags:
             - { name: twig.extension }
 
+    # Maybe removed by your configuration
     best_it_feature_toggle.listener.annotation_subscriber:
         class: BestIt\FeatureToggleBundle\Listener\AnnotationSubscriber
         arguments:
@@ -24,13 +29,25 @@ services:
 
     best_it_feature_toggle.stash.config_stash:
         class: BestIt\FeatureToggleBundle\Stash\ConfigStash
+        arguments:
+            - '@best_it_feature_toggle.expression_language'
         tags:
             - { name: best_it_feature_toggle.stash, priority: 0 }
+
+    # Maybe removed by your configuration
+    best_it_feature_toggle.stash.cookie_stash:
+        class: BestIt\FeatureToggleBundle\Stash\CookieStash
+        arguments:
+            - '@request_stack'
+            - '%best_it_feature_toggle.config.cookie_stash_name%'
+            - '%best_it_feature_toggle.config.cookie_stash_separator%'
+        tags:
+            - { name: best_it_feature_toggle.stash, priority: 255 }
 
     best_it_feature_toggle.profiler.feature_data_collector:
         class: BestIt\FeatureToggleBundle\Profiler\FeatureDataCollector
         arguments:
-            - '@best_it_feature_toggle.bag.stash_bag'
+            - '@best_it_feature_toggle.bag.stack_bag'
         tags:
             -
                 name:     data_collector
@@ -38,8 +55,20 @@ services:
                 id:       'best_it_feature_toggle.profiler.feature_data_collector'
         public: false
 
-    best_it_feature_toggle.listener.route_subscriber:
-        class: BestIt\FeatureToggleBundle\Listener\RouteSubscriber
-        arguments: ['@best_it_feature_toggle.manager.feature_manager']
+    # Maybe removed by your configuration
+    best_it_feature_toggle.listener.routing_metadata_subscriber:
+        class: BestIt\FeatureToggleBundle\Listener\RoutingMetadataSubscriber
+        arguments:
+            - '@best_it_feature_toggle.manager.feature_manager'
+        tags:
+            - { name: kernel.event_subscriber }
+
+    best_it_feature_toggle.bag.stack_bag:
+        class: BestIt\FeatureToggleBundle\Bag\StackBag
+
+    best_it_feature_toggle.listener.stack_collector_subscriber:
+        class: BestIt\FeatureToggleBundle\Listener\StackCollectorSubscriber
+        arguments:
+            - '@best_it_feature_toggle.bag.stack_bag'
         tags:
             - { name: kernel.event_subscriber }

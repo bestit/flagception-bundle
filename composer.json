@@ -12,11 +12,11 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "BestIt\\FeatureToggleBundle\\Tests\\": "src/FeatureToggleBundle/tests"
+      "Tests\\BestIt\\FeatureToggleBundle\\": "tests/FeatureToggleBundle"
     }
   },
   "description": "Provide toggling of features",
-  "license": "proprietary",
+  "license": "MIT",
   "minimum-stability": "dev",
   "name": "bestit/feature-toggle-bundle",
   "prefer-stable": true,

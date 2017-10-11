@@ -2,8 +2,8 @@
 
 namespace BestIt\FeatureToggleBundle\Profiler;
 
-use BestIt\FeatureToggleBundle\Bag\StashBag;
-use BestIt\FeatureToggleBundle\Stash\StashInterface;
+use BestIt\FeatureToggleBundle\Bag\StackBag;
+use BestIt\FeatureToggleBundle\Model\StackGroup;
 use Exception;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,19 +18,20 @@ use Symfony\Component\HttpKernel\DataCollector\DataCollector;
 class FeatureDataCollector extends DataCollector
 {
     /**
-     * The stash bag
-     * @var StashBag
+     * The stack bag
+     *
+     * @var StackBag
      */
-    private $stashBag;
+    private $stackBag;
 
     /**
      * FeatureDataCollector constructor.
      *
-     * @param StashBag $stashBag
+     * @param StackBag $stackBag
      */
-    public function __construct(StashBag $stashBag)
+    public function __construct(StackBag $stackBag)
     {
-        $this->stashBag = $stashBag;
+        $this->stackBag = $stackBag;
     }
 
     /**
@@ -38,28 +39,48 @@ class FeatureDataCollector extends DataCollector
      */
     public function collect(Request $request, Response $response, Exception $exception = null)
     {
-        $features = [];
+        $grouped = [];
 
-        /** @var StashInterface $stash */
-        foreach ($this->stashBag as $stash) {
-            foreach ($stash->getActiveFeatures() as $feature) {
-                $features[$feature][] = $stash->getName();
+        foreach ($this->stackBag->all() as $stack) {
+            $group = $grouped[$stack->getFeatureName()] ?? new StackGroup($stack->getFeatureName());
+
+            if ($stashName = $stack->getStashName()) {
+                $group->addStash($stashName);
             }
+
+            if ($stack->isActive()) {
+                $group->increaseActive();
+            } else {
+                $group->increaseInactive();
+            }
+
+            $grouped[$stack->getFeatureName()] = $group;
         }
 
         $this->data = [
-            'activeFeatures' => $features
+            'stack' => $this->stackBag,
+            'grouped' => $grouped
         ];
     }
 
     /**
-     * Get active features and the stashes who activate this
+     * Get all stacks
      *
-     * @return array
+     * @return StackBag
      */
-    public function getActiveFeatures(): array
+    public function getStack(): StackBag
     {
-        return $this->data['activeFeatures'];
+        return $this->data['stack'];
+    }
+
+    /**
+     * Get all grouped stacks / features
+     *
+     * @return StackGroup[]
+     */
+    public function getGrouped(): array
+    {
+        return $this->data['grouped'];
     }
 
     /**

@@ -2,6 +2,8 @@
 
 namespace BestIt\FeatureToggleBundle\Stash;
 
+use BestIt\FeatureToggleBundle\Model\Context;
+
 /**
  * Interface StashInterface
  *
@@ -18,9 +20,13 @@ interface StashInterface
     public function getName(): string;
 
     /**
-     * Get array of feature names which are active in this stash
+     * Check if the given feature name is active
+     * Optional the context object can contain further options to check
      *
-     * @return string[]
+     * @param string $name
+     * @param Context $context
+     *
+     * @return bool
      */
-    public function getActiveFeatures(): array;
+    public function isActive(string $name, Context $context): bool;
 }
