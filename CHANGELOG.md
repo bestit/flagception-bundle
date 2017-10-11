@@ -1,4 +1,4 @@
-## [Unreleased]
+## [2.0.0] - 2017-10-11
 ### Added
 - Add events before and after feature is searched / requested @chowanski
 - Add optional context object for features (breaking change!) @chowanski
