@@ -4,8 +4,12 @@ namespace Tests\BestIt\FeatureToggleBundle\Bag;
 
 use BestIt\FeatureToggleBundle\Bag\StashBag;
 use BestIt\FeatureToggleBundle\Exception\StashNotFoundException;
-use BestIt\FeatureToggleBundle\Stash\StashInterface;
+use BestIt\FeatureToggleBundle\Stash\ConfigStash;
+use BestIt\FeatureToggleBundle\Stash\CookieStash;
+use BestIt\FeatureToggleBundle\Stash\ArrayStash;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Traversable;
 
 /**
@@ -24,12 +28,8 @@ class StashBagTest extends TestCase
     public function testAdd()
     {
         $bag = new StashBag();
-        $bag->add($cookieStash = $this->createMock(StashInterface::class));
-        $bag->add($configStash = $this->createMock(StashInterface::class));
-
-        $configStash
-            ->method('getName')
-            ->willReturn('config');
+        $bag->add($arrayStash = new ArrayStash());
+        $bag->add($configStash = new ConfigStash(new ExpressionLanguage()));
 
         static::assertSame($configStash, $bag->get('config'));
     }
@@ -42,16 +42,8 @@ class StashBagTest extends TestCase
     public function testHas()
     {
         $bag = new StashBag();
-        $bag->add($cookieStash = $this->createMock(StashInterface::class));
-        $bag->add($configStash = $this->createMock(StashInterface::class));
-
-        $configStash
-            ->method('getName')
-            ->willReturn('config');
-
-        $cookieStash
-            ->method('getName')
-            ->willReturn('cookie');
+        $bag->add($arrayStash = new ArrayStash());
+        $bag->add($configStash = new ConfigStash(new ExpressionLanguage()));
 
         static::assertEquals(true, $bag->has('config'));
         static::assertEquals(false, $bag->has('foobar'));
@@ -65,16 +57,8 @@ class StashBagTest extends TestCase
     public function testGet()
     {
         $bag = new StashBag();
-        $bag->add($cookieStash = $this->createMock(StashInterface::class));
-        $bag->add($configStash = $this->createMock(StashInterface::class));
-
-        $configStash
-            ->method('getName')
-            ->willReturn('config');
-
-        $cookieStash
-            ->method('getName')
-            ->willReturn('cookie');
+        $bag->add($arrayStash = new ArrayStash());
+        $bag->add($configStash = new ConfigStash(new ExpressionLanguage()));
 
         static::assertSame($configStash, $bag->get('config'));
     }
@@ -89,16 +73,8 @@ class StashBagTest extends TestCase
         $this->expectException(StashNotFoundException::class);
 
         $bag = new StashBag();
-        $bag->add($cookieStash = $this->createMock(StashInterface::class));
-        $bag->add($configStash = $this->createMock(StashInterface::class));
-
-        $configStash
-            ->method('getName')
-            ->willReturn('config');
-
-        $cookieStash
-            ->method('getName')
-            ->willReturn('cookie');
+        $bag->add($arrayStash = new ArrayStash());
+        $bag->add($configStash = new ConfigStash(new ExpressionLanguage()));
 
         $bag->get('custom_object');
     }
@@ -111,21 +87,9 @@ class StashBagTest extends TestCase
     public function testIteration()
     {
         $bag = new StashBag();
-        $bag->add($cookieStash = $this->createMock(StashInterface::class));
-        $bag->add($configStash = $this->createMock(StashInterface::class));
-        $bag->add($customObjectStash = $this->createMock(StashInterface::class));
-
-        $configStash
-            ->method('getName')
-            ->willReturn('config');
-
-        $cookieStash
-            ->method('getName')
-            ->willReturn('cookie');
-
-        $customObjectStash
-            ->method('getName')
-            ->willReturn('custom_object');
+        $bag->add($arrayStash = new ArrayStash());
+        $bag->add($configStash = new ConfigStash(new ExpressionLanguage()));
+        $bag->add($cookieStash = new CookieStash(new RequestStack(), 'cookie', ','));
 
         static::assertInstanceOf(Traversable::class, $bag);
 
@@ -133,7 +97,7 @@ class StashBagTest extends TestCase
         foreach ($bag as $order => $stash) {
             switch ($i) {
                 case 0:
-                    static::assertSame($cookieStash, $stash);
+                    static::assertSame($arrayStash, $stash);
                     break;
 
                 case 1:
@@ -141,7 +105,7 @@ class StashBagTest extends TestCase
                     break;
 
                 case 2:
-                    static::assertSame($customObjectStash, $stash);
+                    static::assertSame($cookieStash, $stash);
                     break;
             }
 
@@ -157,21 +121,9 @@ class StashBagTest extends TestCase
     public function testAll()
     {
         $bag = new StashBag();
-        $bag->add($cookieStash = $this->createMock(StashInterface::class));
-        $bag->add($configStash = $this->createMock(StashInterface::class));
-        $bag->add($customObjectStash = $this->createMock(StashInterface::class));
-
-        $configStash
-            ->method('getName')
-            ->willReturn('config');
-
-        $cookieStash
-            ->method('getName')
-            ->willReturn('cookie');
-
-        $customObjectStash
-            ->method('getName')
-            ->willReturn('custom_object');
+        $bag->add($arrayStash = new ArrayStash());
+        $bag->add($configStash = new ConfigStash(new ExpressionLanguage()));
+        $bag->add($cookieStash = new CookieStash(new RequestStack(), 'cookie', ','));
 
         static::assertInstanceOf(Traversable::class, $bag);
 
@@ -179,7 +131,7 @@ class StashBagTest extends TestCase
         foreach ($bag->all() as $order => $stash) {
             switch ($i) {
                 case 0:
-                    static::assertSame($cookieStash, $stash);
+                    static::assertSame($arrayStash, $stash);
                     break;
 
                 case 1:
@@ -187,7 +139,7 @@ class StashBagTest extends TestCase
                     break;
 
                 case 2:
-                    static::assertSame($customObjectStash, $stash);
+                    static::assertSame($cookieStash, $stash);
                     break;
             }
 

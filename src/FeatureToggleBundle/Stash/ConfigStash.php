@@ -65,7 +65,10 @@ class ConfigStash implements StashInterface
         $constraints = $this->features[$name]['constraints'] ?? [];
         foreach ($constraints as $constraint) {
             try {
-                $result = $this->expressionLanguage->evaluate($constraint, ['context' => $context]);
+                $result = $this->expressionLanguage->evaluate($constraint, array_merge(
+                    $context->all(),
+                    ['context' => $context]
+                ));
             } catch (SyntaxError $exception) {
                 throw new ConstraintSyntaxException('Feature toggle constraint is invalid', 0, $exception);
             }

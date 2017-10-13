@@ -2,7 +2,9 @@
 
 namespace BestIt\FeatureToggleBundle\Manager;
 
+use BestIt\FeatureToggleBundle\Bag\ContextDecoratorBag;
 use BestIt\FeatureToggleBundle\Bag\StashBag;
+use BestIt\FeatureToggleBundle\Decorator\ContextDecoratorInterface;
 use BestIt\FeatureToggleBundle\Event\PostFeatureEvent;
 use BestIt\FeatureToggleBundle\Event\PreFeatureEvent;
 use BestIt\FeatureToggleBundle\Model\Context;
@@ -26,6 +28,13 @@ class FeatureManager implements FeatureManagerInterface
     private $stashBag;
 
     /**
+     * The context decorator bag
+     *
+     * @var ContextDecoratorBag
+     */
+    private $contextDecoratorBag;
+
+    /**
      * The event dispatcher
      *
      * @var EventDispatcherInterface
@@ -36,11 +45,13 @@ class FeatureManager implements FeatureManagerInterface
      * FeatureManager constructor.
      *
      * @param StashBag $stashBag
+     * @param ContextDecoratorBag $decoratorBag
      * @param EventDispatcherInterface $eventDispatcher
      */
-    public function __construct(StashBag $stashBag, EventDispatcherInterface $eventDispatcher)
+    public function __construct(StashBag $stashBag, ContextDecoratorBag $decoratorBag, EventDispatcherInterface $eventDispatcher)
     {
         $this->stashBag = $stashBag;
+        $this->contextDecoratorBag = $decoratorBag;
         $this->eventDispatcher = $eventDispatcher;
     }
 
@@ -51,6 +62,11 @@ class FeatureManager implements FeatureManagerInterface
     {
         if ($context === null) {
             $context = new Context();
+        }
+
+        /** @var ContextDecoratorInterface $decorator */
+        foreach ($this->contextDecoratorBag as $decorator) {
+            $decorator->decorate($context);
         }
 
         // Dispatch pre event

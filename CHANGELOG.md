@@ -1,8 +1,14 @@
+## Unreleased
+### Added
+- Add ContextDecoratorInterface, CompilerPass and Tag for modify the context object globally @chowanski
+- All context content are available as own variable for expression constraints @chowanski
+- Add profiler icon @chowanski
+
 ## [2.0.0] - 2017-10-11
 ### Added
 - Add events before and after feature is searched / requested @chowanski
 - Add optional context object for features (breaking change!) @chowanski
-- Add 'isActive' method for stashes
+- Add 'isActive' method for stashes @chowanski
 - Add configuration option for routing metadata subscriber @chowanski
 - Add configuration for cookie stash separator @chowanski
 - Add constraints for ConfigStash @chowanski
