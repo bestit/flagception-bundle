@@ -9,6 +9,7 @@ services:
         class: BestIt\FeatureToggleBundle\Manager\FeatureManager
         arguments:
             - '@best_it_feature_toggle.bag.stash_bag'
+            - '@best_it_feature_toggle.bag.context_decorator_bag'
             - '@event_dispatcher'
 
     best_it_feature_toggle.twig.toggle_extension:
@@ -72,3 +73,6 @@ services:
             - '@best_it_feature_toggle.bag.stack_bag'
         tags:
             - { name: kernel.event_subscriber }
+
+    best_it_feature_toggle.bag.context_decorator_bag:
+        class: BestIt\FeatureToggleBundle\Bag\ContextDecoratorBag

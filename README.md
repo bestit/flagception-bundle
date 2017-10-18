@@ -72,8 +72,8 @@ best_it_feature_toggle:
             
             # Optional further constraints which should return true (see Step 5)
             constraints:
-                    - '"ROLE_ADMIN" in context.get("user_role", [])'
-                    - 'context.get("user_id") === 12'
+                    - '"ROLE_ADMIN" in user_role'
+                    - 'user_id === 12'
         feature_456:
             active: false
         feature_789:
@@ -135,7 +135,7 @@ Step 5: Context
 -------------------------
 Maybe you need more than a simple true/false. For example, if you want to use A / B Testing or admins should always see the feature. 
 You can therefore specify an (optional) context object and specify any values there. In your stash, you can activate the feature 
-depending on the given context values. You can set context values by the isActive method or globally via event (see step 6 and 7).
+depending on the given context values. You can set context values by the isActive method or globally via the ContextDecorator (see step 6 and 7).
 In most cases, you should set context values globally (eg. the user group).
 
 Example to use context object in stash:
@@ -175,8 +175,12 @@ best_it_feature_toggle:
         feature_abc:
             active: false
             constraints:
-                    - '"ROLE_ADMIN" in context.get("user_role", [])'
-                    - 'context.get("user_id") === 12'
+                    - '"ROLE_ADMIN" in user_role'
+                    - 'user_id === 12'
+                    
+                    # Or optional with the context variable and a default value
+                    # For exampe: the variable 'customer_number' may not exists (no globally value), then return 0
+                    - 'context.get("customer_number", 0) === 12'
 ```
 
 In this example, the default active state is false. So the ConfgStash execute and evaluate all given constraints until one return true.
@@ -338,7 +342,43 @@ class FooService
 }
 ```
 
-Step 7: Events
+Step 7: ContextDecorator
+-------------------------
+Usually you will need the same context values again and again. Then it is better to set the values globally instead of every single request.
+Just create a class, implement the `ContextDecoratorInterface` and tag the service with `best_it_feature_toggle.context_decorator`.
+You can then expand or customize the context object as you like.
+
+```php
+# UserContextDecorator.php
+
+class UserContextDecorator implements ContextDecoratorInterface
+{
+    private $user;
+    
+    public function __construct(User $user) 
+    { 
+        $this->user = $user; 
+    }
+    
+    public function getName(): string
+    {
+       return 'user_context_decorator';
+    }
+    
+    public function decorate(Context $context): Context
+    {
+        $context->add('user_is_admin', $this->user->isAdmin());
+        
+        return $context;
+    }
+}
+```
+
+Step 8: Events
 -------------------------
 The bundle provides two events if a feature is requested. One before and after the feature was searched for in the stashes.
-The pre event is a good entry point to automatically inject certain values into the context object.
+
+
+Credits
+-------------------------
+Feature toggle profiler icon from https://github.com/ionic-team/ionicons

@@ -2,13 +2,15 @@
 
 namespace Tests\BestIt\FeatureToggleBundle\Manager;
 
+use BestIt\FeatureToggleBundle\Bag\ContextDecoratorBag;
 use BestIt\FeatureToggleBundle\Bag\StashBag;
+use BestIt\FeatureToggleBundle\Decorator\ContextDecoratorInterface;
 use BestIt\FeatureToggleBundle\Event\PostFeatureEvent;
 use BestIt\FeatureToggleBundle\Event\PreFeatureEvent;
 use BestIt\FeatureToggleBundle\Manager\FeatureManager;
 use BestIt\FeatureToggleBundle\Manager\FeatureManagerInterface;
 use BestIt\FeatureToggleBundle\Model\Context;
-use BestIt\FeatureToggleBundle\Stash\StashInterface;
+use BestIt\FeatureToggleBundle\Stash\ArrayStash;
 use BestIt\FeatureToggleBundle\ToggleEvents;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -30,6 +32,7 @@ class FeatureManagerTest extends TestCase
     {
         $manager = new FeatureManager(
             $this->createMock(StashBag::class),
+            $this->createMock(ContextDecoratorBag::class),
             $this->createMock(EventDispatcherInterface::class)
         );
 
@@ -45,26 +48,17 @@ class FeatureManagerTest extends TestCase
     {
         $manager = new FeatureManager(
             $stashBag = new StashBag(),
+            $contextDecoratorBag = new ContextDecoratorBag(),
             $this->createMock(EventDispatcherInterface::class)
         );
 
-        $stashBag->add($cookieStash = $this->createMock(StashInterface::class));
-        $cookieStash
-            ->method('isActive')
-            ->with('feature_foo', new Context())
-            ->willReturn(false);
+        $contextDecoratorBag->add($contextDecorator = $this->createMock(ContextDecoratorInterface::class));
+        $contextDecorator
+            ->method('decorate')
+            ->with(static::isInstanceOf(Context::class))
+            ->willReturnArgument(0);
 
-        $stashBag->add($configStash = $this->createMock(StashInterface::class));
-        $configStash
-            ->method('isActive')
-            ->with('feature_foo', new Context())
-            ->willReturn(false);
-
-        $stashBag->add($customObjectStash = $this->createMock(StashInterface::class));
-        $customObjectStash
-            ->method('isActive')
-            ->with('feature_foo', new Context())
-            ->willReturn(false);
+        $stashBag->add(new ArrayStash());
 
         static::assertEquals(false, $manager->isActive('feature_foo'));
     }
@@ -78,8 +72,15 @@ class FeatureManagerTest extends TestCase
     {
         $manager = new FeatureManager(
             $stashBag = new StashBag(),
+            $contextDecoratorBag = new ContextDecoratorBag(),
             $eventDispatcher = $this->createMock(EventDispatcherInterface::class)
         );
+
+        $contextDecoratorBag->add($contextDecorator = $this->createMock(ContextDecoratorInterface::class));
+        $contextDecorator
+            ->method('decorate')
+            ->with(static::isInstanceOf(Context::class))
+            ->willReturnArgument(0);
 
         $eventDispatcher
             ->expects(static::exactly(2))
@@ -95,31 +96,12 @@ class FeatureManagerTest extends TestCase
                         'feature_foo',
                         true,
                         new Context(),
-                        'config'
+                        'array'
                     )
                 ]
             );
 
-        $stashBag->add($cookieStash = $this->createMock(StashInterface::class));
-        $cookieStash
-            ->method('isActive')
-            ->with('feature_foo', new Context())
-            ->willReturn(false);
-
-        $stashBag->add($configStash = $this->createMock(StashInterface::class));
-        $configStash
-            ->method('getName')
-            ->willReturn('config');
-        $configStash
-            ->method('isActive')
-            ->with('feature_foo', new Context())
-            ->willReturn(true);
-
-        $stashBag->add($customObjectStash = $this->createMock(StashInterface::class));
-        $customObjectStash
-            ->method('isActive')
-            ->with('feature_foo', new Context())
-            ->willReturn(false);
+        $stashBag->add(new ArrayStash(['feature_foo']));
 
         static::assertEquals(true, $manager->isActive('feature_foo'));
     }
@@ -133,8 +115,15 @@ class FeatureManagerTest extends TestCase
     {
         $manager = new FeatureManager(
             $stashBag = new StashBag(),
+            $contextDecoratorBag = new ContextDecoratorBag(),
             $eventDispatcher = $this->createMock(EventDispatcherInterface::class)
         );
+
+        $contextDecoratorBag->add($contextDecorator = $this->createMock(ContextDecoratorInterface::class));
+        $contextDecorator
+            ->method('decorate')
+            ->with(static::isInstanceOf(Context::class))
+            ->willReturnArgument(0);
 
         $context = new Context();
         $context->add('user_id', 23);
@@ -154,31 +143,13 @@ class FeatureManagerTest extends TestCase
                         'feature_foo',
                         true,
                         $context,
-                        'config'
+                        'array'
                     )
                 ]
             );
 
-        $stashBag->add($cookieStash = $this->createMock(StashInterface::class));
-        $cookieStash
-            ->method('isActive')
-            ->with('feature_foo', $context)
-            ->willReturn(false);
-
-        $stashBag->add($configStash = $this->createMock(StashInterface::class));
-        $configStash
-            ->method('getName')
-            ->willReturn('config');
-        $configStash
-            ->method('isActive')
-            ->with('feature_foo', $context)
-            ->willReturn(true);
-
-        $stashBag->add($customObjectStash = $this->createMock(StashInterface::class));
-        $customObjectStash
-            ->method('isActive')
-            ->with('feature_foo', $context)
-            ->willReturn(false);
+        $stashBag->add(new ArrayStash(['feature_bar']));
+        $stashBag->add(new ArrayStash(['feature_foo']));
 
         static::assertEquals(true, $manager->isActive('feature_foo', $context));
     }

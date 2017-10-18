@@ -2,6 +2,7 @@
 
 namespace BestIt\FeatureToggleBundle;
 
+use BestIt\FeatureToggleBundle\DependencyInjection\CompilerPass\ContextDecoratorPass;
 use BestIt\FeatureToggleBundle\DependencyInjection\CompilerPass\StashPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
@@ -22,5 +23,6 @@ class BestItFeatureToggleBundle extends Bundle
         parent::build($container);
 
         $container->addCompilerPass(new StashPass());
+        $container->addCompilerPass(new ContextDecoratorPass());
     }
 }
