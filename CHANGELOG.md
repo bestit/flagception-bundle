@@ -1,4 +1,4 @@
-## Unreleased
+## [2.1.0] - 2017-10-26
 ### Added
 - Add ContextDecoratorInterface, CompilerPass and Tag for modify the context object globally @chowanski
 - All context content are available as own variable for expression constraints @chowanski
