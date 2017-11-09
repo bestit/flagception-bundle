@@ -56,6 +56,11 @@ All here defined features are saved in the `ConfigStash`.
 ```yml
 # config.yml
 
+parameters:
+   feature_enabled: true 
+   env(FEATURE_ENABLED): true 
+   another_feature_enabled: "true"
+
 best_it_feature_toggle:
 
     # Your Features for ConfigStash (optional you left it empty)
@@ -78,6 +83,14 @@ best_it_feature_toggle:
             active: false
         feature_789:
             active: true
+       feature_910:
+       
+            # Also "env" and parameter values are valid
+            active: "%env(FEATURE_ENABLED)%"
+       feature_abc:
+            active: "%feature_enabled%"
+       feature_def:
+            active: 1
     
     # CookieStash (optional)
     cookie_stash:           

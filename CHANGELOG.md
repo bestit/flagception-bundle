@@ -1,3 +1,7 @@
+## [2.1.1] - 2017-11-09
+### Fix
+- Fix variables for configuration @RedactedProfile
+
 ## [2.1.0] - 2017-10-26
 ### Added
 - Add ContextDecoratorInterface, CompilerPass and Tag for modify the context object globally @chowanski
