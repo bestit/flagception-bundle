@@ -1,3 +1,7 @@
+## [2.1.2] - 2017-11-13
+### Fix
+- Bug #13 / Fix bool cast for configuration @teiling88
+
 ## [2.1.1] - 2017-11-09
 ### Fix
 - Fix variables for configuration @RedactedProfile
