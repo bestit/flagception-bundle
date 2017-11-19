@@ -1,3 +1,7 @@
+## Unreleased
+### Added
+- Add travis service @chowanski
+
 ## [2.1.2] - 2017-11-13
 ### Fix
 - Bug #13 / Fix bool cast for configuration @teiling88

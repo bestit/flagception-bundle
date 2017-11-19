@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="apptus-exporter" default="build">
+<project name="feature-toggle-bundle" default="build">
     <autoloader autoloaderpath="vendor/autoload.php"/>
 
     <target name="php-md" description="PHP Mess Detector">
@@ -24,7 +24,7 @@
                 showSniffs="true"
                 showWarnings="true"
                 haltonerror="true"
-                haltonwarning="false"
+                haltonwarning="true"
         >
             <fileset dir="./">
                 <include name="src/**/*.php"/>
@@ -43,6 +43,7 @@
 
     <target name="php-unit" description="Execute php unit tests">
         <exec command="./vendor/bin/phpunit --coverage-text -c ./build/phpunit.xml" checkreturn="true" logoutput="true"/>
+        <exec command="./build/coverage ./clover.xml 50" checkreturn="true" logoutput="true"/>
     </target>
 
     <target name="analyze" description="Analyze source code" depends="php-md,php-cs,php-loc,php-cpd" />

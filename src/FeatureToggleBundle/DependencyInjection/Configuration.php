@@ -30,7 +30,9 @@ class Configuration implements ConfigurationInterface
                             ->booleanNode('active')
                                 ->beforeNormalization()
                                     ->ifString()
-                                        ->then(function($v) { return filter_var($v, FILTER_VALIDATE_BOOLEAN); })
+                                        ->then(function ($v) {
+                                            return filter_var($v, FILTER_VALIDATE_BOOLEAN);
+                                        })
                                 ->end()
                                 ->defaultFalse()
                             ->end()
@@ -43,10 +45,12 @@ class Configuration implements ConfigurationInterface
                 ->arrayNode('cookie_stash')
                     ->addDefaultsIfNotSet()
                     ->children()
-                        ->booleanNode('active')->defaultFalse()
+                        ->booleanNode('active')
                             ->beforeNormalization()
                                 ->ifString()
-                                    ->then(function($v) { return filter_var($v, FILTER_VALIDATE_BOOLEAN); })
+                                    ->then(function ($v) {
+                                        return filter_var($v, FILTER_VALIDATE_BOOLEAN);
+                                    })
                             ->end()
                             ->defaultFalse()
                         ->end()
@@ -57,10 +61,12 @@ class Configuration implements ConfigurationInterface
                 ->arrayNode('annotation')
                     ->addDefaultsIfNotSet()
                     ->children()
-                        ->booleanNode('active')->defaultFalse()
+                        ->booleanNode('active')
                             ->beforeNormalization()
                                 ->ifString()
-                                ->then(function($v) { return filter_var($v, FILTER_VALIDATE_BOOLEAN); })
+                                ->then(function ($v) {
+                                    return filter_var($v, FILTER_VALIDATE_BOOLEAN);
+                                })
                             ->end()
                             ->defaultFalse()
                         ->end()
@@ -69,10 +75,12 @@ class Configuration implements ConfigurationInterface
                 ->arrayNode('routing_metadata')
                     ->addDefaultsIfNotSet()
                     ->children()
-                        ->booleanNode('active')->defaultFalse()
+                        ->booleanNode('active')
                             ->beforeNormalization()
                                 ->ifString()
-                                ->then(function($v) { return filter_var($v, FILTER_VALIDATE_BOOLEAN); })
+                                ->then(function ($v) {
+                                    return filter_var($v, FILTER_VALIDATE_BOOLEAN);
+                                })
                             ->end()
                             ->defaultFalse()
                         ->end()
