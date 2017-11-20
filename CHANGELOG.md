@@ -1,6 +1,7 @@
 ## Unreleased
 ### Added
 - Add travis service @chowanski
+- Add sensiolabs insight service @chowanski
 
 ## [2.1.2] - 2017-11-13
 ### Fix
