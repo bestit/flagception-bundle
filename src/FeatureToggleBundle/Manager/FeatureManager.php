@@ -48,8 +48,11 @@ class FeatureManager implements FeatureManagerInterface
      * @param ContextDecoratorBag $decoratorBag
      * @param EventDispatcherInterface $eventDispatcher
      */
-    public function __construct(StashBag $stashBag, ContextDecoratorBag $decoratorBag, EventDispatcherInterface $eventDispatcher)
-    {
+    public function __construct(
+        StashBag $stashBag,
+        ContextDecoratorBag $decoratorBag,
+        EventDispatcherInterface $eventDispatcher
+    ) {
         $this->stashBag = $stashBag;
         $this->contextDecoratorBag = $decoratorBag;
         $this->eventDispatcher = $eventDispatcher;
