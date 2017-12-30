@@ -5,14 +5,13 @@
          xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/4.8/phpunit.xsd"
          backupGlobals="false"
          colors="true"
-         bootstrap="../vendor/autoload.php"
->
+         bootstrap="../vendor/autoload.php">
     <php>
-        <ini name="error_reporting" value="-1" />
+        <ini name="error_reporting" value="-1"/>
     </php>
 
     <testsuites>
-        <testsuite name="Project Test Suite">
+        <testsuite name="flagception/flagception-bundle">
             <directory>../tests</directory>
         </testsuite>
     </testsuites>
@@ -27,6 +26,6 @@
         </whitelist>
     </filter>
     <logging>
-        <log type="coverage-clover" target="./../clover.xml"/>
+        <log type="coverage-clover" target="./logs/clover.xml"/>
     </logging>
 </phpunit>

@@ -1,36 +1,47 @@
 {
+  "name": "flagception/flagception-bundle",
+  "type": "symfony-bundle",
+  "description": "Feature toggle bundle on steroids.",
+  "keywords": ["feature", "feature-toggle", "feature-flags", "flags", "flagception", "symfony", "bundle", "rollout", "testing", "toggle"],
+  "license": "MIT",
   "authors": [
     {
       "name": "Michel Chowanski",
       "email": "michel.chowanski@bestit-online.de"
     }
   ],
+  "require": {
+    "php": "^5.6||^7.0",
+    "symfony/framework-bundle": ">=2.7",
+    "doctrine/common": "^2.3",
+    "flagception/flagception": "^1.1"
+  },
+  "require-dev": {
+    "phing/phing": "^2.15",
+    "symfony/phpunit-bridge": ">=2.7",
+    "symfony/twig-bridge": ">=2.7",
+    "flagception/contentful-activator": "^1.0",
+    "phpunit/phpunit": "^5.5",
+    "squizlabs/php_codesniffer": "^2.8",
+    "php-coveralls/php-coveralls": "^1.0"
+  },
   "autoload": {
     "psr-4": {
-      "BestIt\\FeatureToggleBundle\\": "src/FeatureToggleBundle"
+      "Flagception\\Bundle\\FlagceptionBundle\\": "src/"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "Tests\\BestIt\\FeatureToggleBundle\\": "tests/FeatureToggleBundle"
+      "Flagception\\Tests\\FlagceptionBundle\\": "tests"
     }
   },
-  "description": "Provide toggling of features",
-  "license": "MIT",
-  "minimum-stability": "dev",
-  "name": "bestit/feature-toggle-bundle",
-  "prefer-stable": true,
-  "require": {
-    "php": "^7.0",
-    "symfony/symfony": "^3.1"
+  "extra": {
+    "thanks": {
+      "name": "flagception/flagception",
+      "url": "https://github.com/bestit/flagception-sdk"
+    }
   },
-  "require-dev": {
-    "phpunit/phpunit": "^5.5",
-    "phing/phing": "^2.16",
-    "squizlabs/php_codesniffer": "^2.8",
-    "sebastian/phpcpd": "^3.0",
-    "phpmd/phpmd": "^2.6",
-    "phploc/phploc": "^3.0"
-  },
-  "type": "lib"
+  "suggest": {
+    "flagception/contentful-activator": "Fetch feature flags from contentful."
+  }
 }

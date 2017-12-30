@@ -1,0 +1,90 @@
+services:
+    flagception.manager.feature_manager:
+        class: Flagception\Manager\FeatureManager
+        arguments:
+            - '@flagception.activator.chain_activator'
+            - '@flagception.decorator.chain_decorator'
+        public: true
+
+    flagception.expression_language:
+        class: Symfony\Component\ExpressionLanguage\ExpressionLanguage
+        factory: 'flagception.factory.expression_language_factory:create'
+        public: false
+
+    flagception.twig.toggle_extension:
+        class: Flagception\Bundle\FlagceptionBundle\Twig\ToggleExtension
+        arguments:
+            - '@flagception.manager.feature_manager'
+        tags:
+            - { name: twig.extension }
+        public: false
+
+    flagception.profiler.feature_data_collector:
+        class: Flagception\Bundle\FlagceptionBundle\Profiler\FeatureDataCollector
+        arguments:
+            - '@flagception.bag.feature_result_bag'
+        tags:
+            -
+                name:     data_collector
+                template: '@Flagception/profiler/layout.html.twig'
+                id:       'flagception'
+        public: false
+        
+    flagception.bag.feature_result_bag:
+        class: Flagception\Bundle\FlagceptionBundle\Bag\FeatureResultBag
+        public: false
+
+    flagception.bag.feature_config_bag:
+        class: Flagception\Bundle\FlagceptionBundle\Bag\FeatureConfigBag
+        public: false
+
+    flagception.constraint.constraint_resolver:
+        class: Flagception\Constraint\ConstraintResolver
+        arguments:
+            - '@flagception.expression_language'
+        public: false
+
+    flagception.factory.expression_language_factory:
+        class: Flagception\Factory\ExpressionLanguageFactory
+        public: false
+
+    flagception.constraint_provider.date_provider:
+        class: Flagception\Constraint\Provider\DateProvider
+        tags:
+            - { name: flagception.expression_language_provider }
+        public: false
+
+    flagception.constraint_provider.match_provider:
+        class: Flagception\Constraint\Provider\MatchProvider
+        tags:
+            - { name: flagception.expression_language_provider }
+        public: false
+
+    flagception.activator.chain_activator:
+        class: Flagception\Bundle\FlagceptionBundle\Activator\ProfilerChainActivator
+        arguments:
+            - '@flagception.bag.feature_result_bag'
+        public: false
+
+    flagception.decorator.chain_decorator:
+        class: Flagception\Decorator\ChainDecorator
+        public: false
+
+    # Maybe removed by your configuration
+    flagception.listener.annotation_subscriber:
+        class: Flagception\Bundle\FlagceptionBundle\Listener\AnnotationSubscriber
+        arguments:
+            - '@annotations.reader'
+            - '@flagception.manager.feature_manager'
+        tags:
+            - { name: kernel.event_subscriber }
+        public: true
+
+    # Maybe removed by your configuration
+    flagception.listener.routing_metadata_subscriber:
+        class: Flagception\Bundle\FlagceptionBundle\Listener\RoutingMetadataSubscriber
+        arguments:
+            - '@flagception.manager.feature_manager'
+        tags:
+            - { name: kernel.event_subscriber }
+        public: true

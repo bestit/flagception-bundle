@@ -1,7 +1,7 @@
-## Unreleased
-### Added
-- Add travis service @chowanski
-- Add sensiolabs insight service @chowanski
+## [3.0.0]
+### Refactored
+- Complete refactoring and renaming to `flagception` @migo315
+- See [Upgrade from 2.x](UPGRADE-3.0.md)
 
 ## [2.1.2] - 2017-11-13
 ### Fix
@@ -13,68 +13,68 @@
 
 ## [2.1.0] - 2017-10-26
 ### Added
-- Add ContextDecoratorInterface, CompilerPass and Tag for modify the context object globally @chowanski
-- All context content are available as own variable for expression constraints @chowanski
-- Add profiler icon @chowanski
+- Add ContextDecoratorInterface, CompilerPass and Tag for modify the context object globally @migo315
+- All context content are available as own variable for expression constraints @migo315
+- Add profiler icon @migo315
 
 ## [2.0.0] - 2017-10-11
 ### Added
-- Add events before and after feature is searched / requested @chowanski
-- Add optional context object for features (breaking change!) @chowanski
-- Add 'isActive' method for stashes @chowanski
-- Add configuration option for routing metadata subscriber @chowanski
-- Add configuration for cookie stash separator @chowanski
-- Add constraints for ConfigStash @chowanski
+- Add events before and after feature is searched / requested @migo315
+- Add optional context object for features (breaking change!) @migo315
+- Add 'isActive' method for stashes @migo315
+- Add configuration option for routing metadata subscriber @migo315
+- Add configuration for cookie stash separator @migo315
+- Add constraints for ConfigStash @migo315
 
 ### Changed
 - Changed license to MIT @bestit
-- Fix phpunit whitelist @chowanski
-- Stashes are now explicitly queried for the status of a feature and not every time for all features (breaking change!) @chowanski
-- Move tests to root 'tests' directory @chowanski
-- Profiler shows inactive features too @chowanski
-- Profiler shows given context for features @chowanski
-- Update readme @chowanski
-- Chang configuration option of annotation subscriber @chowanski
+- Fix phpunit whitelist @migo315
+- Stashes are now explicitly queried for the status of a feature and not every time for all features (breaking change!) @migo315
+- Move tests to root 'tests' directory @migo315
+- Profiler shows inactive features too @migo315
+- Profiler shows given context for features @migo315
+- Update readme @migo315
+- Chang configuration option of annotation subscriber @migo315
 
 ### Removed
-- Remove 'getActiveFeatures' method for stashes. Use 'isActive' instead @chowanski
+- Remove 'getActiveFeatures' method for stashes. Use 'isActive' instead @migo315
 
 ## [1.0.4] - 2017-08-07
 ### Added
-- Configuration for enable / disable annotation check @espendiller / @chowanski
-- Add feature handling via route metadata @espendiller / @chowanski
+- Configuration for enable / disable annotation check @espendiller / @migo315
+- Add feature handling via route metadata @espendiller / @migo315
 
 ### Changed
-- Remove feature bag and move logic to ConfigStash @espendiller / @chowanski
+- Remove feature bag and move logic to ConfigStash @espendiller / @migo315
 
 ## [1.0.3] - 2017-08-03
 ### Added
-- Add error message for annotation subscriber if feature is inactive @chowanski
+- Add error message for annotation subscriber if feature is inactive @migo315
 
 ### Change
-- Fix 'Cannot use object of type Closure as array' error @chowanski
+- Fix 'Cannot use object of type Closure as array' error @migo315
 
 ## [1.0.2] - 2017-08-02
 ### Added
-- Add getName method in twig extension for supporting twig version < 1.26 @chowanski
+- Add getName method in twig extension for supporting twig version < 1.26 @migo315
 
 ## [1.0.1] - 2017-08-02
 ### Removed
-- Removed obsolete repository in composer.json @chowanski
+- Removed obsolete repository in composer.json @migo315
 
 ## [1.0.0] - 2017-08-02
 ### Changed
-- Symfony min version downgraded from ^3.2 to ^3.1 @chowanski
+- Symfony min version downgraded from ^3.2 to ^3.1 @migo315
 - Profiler toolbar hides feature section when 0 features are active
-- Fix readme typo @chowanski
+- Fix readme typo @migo315
 
 ## [0.0.1] - 2017-06-23
 ### Added
-- Initial commit and relase @chowanski
-- Add annotation feature check @chowanski
-- Add twig extension for active check @chowanski
-- Add FilterManager @chowanski
-- Add StashBag / FeatureBag @chowanski
-- Add Profiler @chowanski
-- Add ConfigStash @chowanski
-- Add CookieStash @chowanski
+- Initial commit and relase @migo315
+- Add annotation feature check @migo315
+- Add twig extension for active check @migo315
+- Add FilterManager @migo315
+- Add StashBag / FeatureBag @migo315
+- Add Profiler @migo315
+- Add ConfigStash @migo315
+- Add CookieStash @migo315
