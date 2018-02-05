@@ -114,7 +114,7 @@ class FooController
 
 If you request an action with inactive feature flag, you will get a `NotFoundHttpException`.
 
-Take a look to the detail documentation for [Twig](twig.md), [Route](twig.md) or [Annotation](twig.md) usage.
+Take a look to the detail documentation for [Twig](twig.md), [Route](route.md) or [Annotation](annotation.md) usage.
 
 Constraint usage
 -------------------------
