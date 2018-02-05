@@ -1,3 +1,4 @@
 vendor
-clover.xml
 composer.lock
+build/logs/*
+!build/logs/.gitkeep

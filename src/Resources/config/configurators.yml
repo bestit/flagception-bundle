@@ -1,0 +1,25 @@
+services:
+    flagception.configurator.array_configurator:
+        class: Flagception\Bundle\FlagceptionBundle\DependencyInjection\Configurator\ArrayConfigurator
+        tags:
+            - { name: flagception.configurator }
+
+    flagception.configurator.constraint_configurator:
+        class: Flagception\Bundle\FlagceptionBundle\DependencyInjection\Configurator\ConstraintConfigurator
+        tags:
+            - { name: flagception.configurator }
+
+    flagception.configurator.environment_configurator:
+        class: Flagception\Bundle\FlagceptionBundle\DependencyInjection\Configurator\EnvironmentConfigurator
+        tags:
+            - { name: flagception.configurator }
+
+    flagception.configurator.contentful_configurator:
+        class: Flagception\Bundle\FlagceptionBundle\DependencyInjection\Configurator\ContentfulConfigurator
+        tags:
+            - { name: flagception.configurator }
+
+    flagception.configurator.cookie_configurator:
+        class: Flagception\Bundle\FlagceptionBundle\DependencyInjection\Configurator\CookieConfigurator
+        tags:
+            - { name: flagception.configurator }
