@@ -1,3 +1,7 @@
+## [3.0.1]
+### Fix
+- Add service alias for `Flagception\Manager\FeatureManagerInterface` for fixing autowiring @hanishsingla
+
 ## [3.0.0]
 ### Refactored
 - Complete refactoring and renaming to `flagception` @migo315
