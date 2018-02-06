@@ -5,6 +5,8 @@ services:
             - '@flagception.activator.chain_activator'
             - '@flagception.decorator.chain_decorator'
         public: true
+        
+    Flagception\Manager\FeatureManagerInterface: '@flagception.manager.feature_manager'
 
     flagception.expression_language:
         class: Symfony\Component\ExpressionLanguage\ExpressionLanguage
