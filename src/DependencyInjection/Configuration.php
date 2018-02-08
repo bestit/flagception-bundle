@@ -72,6 +72,7 @@ class Configuration implements ConfigurationInterface
                             ->end()
                         ->end()
                     ->end()
+                    ->defaultValue([])
                 ->end()
                 ->arrayNode('annotation')
                     ->addDefaultsIfNotSet()
