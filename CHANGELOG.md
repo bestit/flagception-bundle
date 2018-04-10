@@ -1,3 +1,10 @@
+## Unreleased
+### Fix
+- \#27 Fix route xml in documentation @migo315
+
+### Added
+- \#26 Add feature name advice in documentation @migo315
+
 ## [3.0.1]
 ### Fix
 - Add service alias for `Flagception\Manager\FeatureManagerInterface` for fixing autowiring @hanishsingla

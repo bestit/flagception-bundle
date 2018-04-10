@@ -116,6 +116,12 @@ If you request an action with inactive feature flag, you will get a `NotFoundHtt
 
 Take a look to the detail documentation for [Twig](twig.md), [Route](route.md) or [Annotation](annotation.md) usage.
 
+##### Feature names
+You can name your features as you like. But we recommend using [snake case](https://en.wikipedia.org/wiki/Snake_case).
+Especially because Symfony normalizes values from your YML or XML into snake case (see [here](http://symfony.com/doc/current/components/config/definition.html#normalization)).
+Your feature "flag-a" becomes "flag_a". So you have to check for "flag_a" everywhere in your code, even if you've 
+actually maintained "flag-a" in your YML / XML. Consider this with your feature naming.
+
 Constraint usage
 -------------------------
 In some cases will you need more instead of a simple true / false. So you can define constraints to enable or disable a feature.
