@@ -77,13 +77,13 @@ or via xml
 
     <route id="blog_list" path="/blog/{page}">
         <default key="_controller">AppBundle:Blog:list</default>
-        <default key="_feature">feature_123</requirement>
+        <default key="_feature">feature_123</default>
     </route>
 
     <!-- Symfony 3.4 / 4.0 -->
     <route id="blog_list" path="/blog/{page}">
         <controller>AppBundle:Blog:list</controller>
-        <default key="_feature">feature_123</requirement>
+        <default key="_feature">feature_123</default>
     </route>
     
     <!-- ... -->
