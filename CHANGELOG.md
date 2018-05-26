@@ -4,6 +4,7 @@
 
 ### Added
 - \#26 Add feature name advice in documentation @migo315
+- Add `php-mock` as dev dependency and add missing contentful configurator test
 
 ## [3.0.1]
 ### Fix
