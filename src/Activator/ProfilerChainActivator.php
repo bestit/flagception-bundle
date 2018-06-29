@@ -2,9 +2,7 @@
 
 namespace Flagception\Bundle\FlagceptionBundle\Activator;
 
-use Flagception\Bundle\FlagceptionBundle\Model\Result;
-use Flagception\Activator\FeatureActivatorInterface;
-use Flagception\Bundle\FlagceptionBundle\Bag\FeatureResultBag;
+use Flagception\Activator\ChainActivator;
 use Flagception\Model\Context;
 
 /**
@@ -13,42 +11,23 @@ use Flagception\Model\Context;
  * @author Michel Chowanski <michel.chowanski@bestit-online.de>
  * @package Flagception\Bundle\FlagceptionBundle\Activator
  */
-class ProfilerChainActivator implements FeatureActivatorInterface
+class ProfilerChainActivator extends ChainActivator
 {
     /**
-     * Ordered array of feature activators
+     * Log for each result from chained activators
      *
-     * @var FeatureActivatorInterface[]
+     * @var array
      */
-    private $bag = [];
+    private $requestLog = [];
 
     /**
-     * The result bag
+     * Get request log
      *
-     * @var FeatureResultBag
+     * @return array
      */
-    private $resultBag;
-
-    /**
-     * ProfilerChainActivator constructor.
-     *
-     * @param FeatureResultBag $resultBag
-     */
-    public function __construct(FeatureResultBag $resultBag)
+    public function getRequestLog()
     {
-        $this->resultBag = $resultBag;
-    }
-
-    /**
-     * Add activator
-     *
-     * @param FeatureActivatorInterface $activator
-     *
-     * @return void
-     */
-    public function add(FeatureActivatorInterface $activator)
-    {
-        $this->bag[] = $activator;
+        return $this->requestLog;
     }
 
     /**
@@ -56,7 +35,7 @@ class ProfilerChainActivator implements FeatureActivatorInterface
      */
     public function getName()
     {
-        return 'profiler_chain';
+        return 'chain';
     }
 
     /**
@@ -64,18 +43,51 @@ class ProfilerChainActivator implements FeatureActivatorInterface
      */
     public function isActive($name, Context $context)
     {
+        if (isset($this->requestLog[$name])) {
+            $log = $this->requestLog[$name];
+        } else {
+            $log = [
+                'requests' => 0,
+                'activeRequests' => 0,
+                'inactiveRequests' => 0,
+                'activators' => [],
+                'stack' => []
+            ];
+        }
+
         $result = false;
-        foreach ($this->bag as $activator) {
+        foreach ($this->getActivators() as $activator) {
             if ($activator->isActive($name, $context) === true) {
                 $result = true;
             }
 
-            $this->resultBag->add(new Result($name, $result, $context, $activator->getName()));
+            // Log result
+            $log['stack'][] = [
+                'result' => $result,
+                'context' => $context,
+                'activator' => $activator->getName()
+            ];
+
+            if (!in_array($activator->getName(), $log['activators'], true)) {
+                $log['activators'][] = $activator->getName();
+            }
 
             if ($result === true) {
                 break;
             }
         }
+
+        // Log request
+        $log['requests']++;
+
+        if ($result === true) {
+            $log['activeRequests']++;
+        } else {
+            $log['inactiveRequests']++;
+        }
+
+        // Save log
+        $this->requestLog[$name] = $log;
 
         return $result;
     }

@@ -24,7 +24,8 @@ services:
     flagception.profiler.feature_data_collector:
         class: Flagception\Bundle\FlagceptionBundle\Profiler\FeatureDataCollector
         arguments:
-            - '@flagception.bag.feature_result_bag'
+            - '@flagception.activator.chain_activator'
+            - '@flagception.decorator.chain_decorator'
         tags:
             -
                 name:     data_collector

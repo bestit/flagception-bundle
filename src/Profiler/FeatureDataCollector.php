@@ -2,9 +2,9 @@
 
 namespace Flagception\Bundle\FlagceptionBundle\Profiler;
 
-use Flagception\Bundle\FlagceptionBundle\Bag\FeatureResultBag;
+use Flagception\Bundle\FlagceptionBundle\Activator\ProfilerChainActivator;
 use Exception;
-use Flagception\Bundle\FlagceptionBundle\Model\ResultGroup;
+use Flagception\Decorator\ChainDecorator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;
@@ -18,20 +18,29 @@ use Symfony\Component\HttpKernel\DataCollector\DataCollector;
 class FeatureDataCollector extends DataCollector
 {
     /**
-     * The feature result bag
+     * The profiler chain activator
      *
-     * @var FeatureResultBag
+     * @var ProfilerChainActivator
      */
-    private $resultBag;
+    private $chainActivator;
+
+    /**
+     * The chain decorator
+     *
+     * @var ChainDecorator
+     */
+    private $chainDecorator;
 
     /**
      * FeatureDataCollector constructor.
      *
-     * @param FeatureResultBag $resultBag
+     * @param ProfilerChainActivator $chainActivator
+     * @param ChainDecorator $chainDecorator
      */
-    public function __construct(FeatureResultBag $resultBag)
+    public function __construct(ProfilerChainActivator $chainActivator, ChainDecorator $chainDecorator)
     {
-        $this->resultBag = $resultBag;
+        $this->chainActivator = $chainActivator;
+        $this->chainDecorator = $chainDecorator;
     }
 
     /**
@@ -39,52 +48,41 @@ class FeatureDataCollector extends DataCollector
      */
     public function collect(Request $request, Response $response, Exception $exception = null)
     {
-        $grouped = [];
-
-        foreach ($this->resultBag->all() as $result) {
-            if (array_key_exists($result->getFeatureName(), $grouped)) {
-                $group = $grouped[$result->getFeatureName()];
-            } else {
-                $group = new ResultGroup($result->getFeatureName());
-            }
-
-            if ($result->isActive() && $activator = $result->getActivator()) {
-                $group->addActivator($activator);
-            }
-
-            if ($result->isActive()) {
-                $group->increaseActive();
-            } else {
-                $group->increaseInactive();
-            }
-
-            $grouped[$result->getFeatureName()] = $group;
-        }
-
         $this->data = [
-            'results' => $this->resultBag->all(),
-            'groupedResults' => $grouped
+            'requests' => $this->chainActivator->getRequestLog(),
+            'activators' => $this->chainActivator->getActivators(),
+            'decorators' => $this->chainDecorator->getDecorators()
         ];
     }
 
     /**
      * Get all results
      *
-     * @return FeatureResultBag
+     * @return array
      */
-    public function getResults()
+    public function getRequests()
     {
-        return $this->data['results'];
+        return $this->data['requests'];
     }
 
     /**
-     * Get all grouped results / features
+     * Get all activators
      *
-     * @return ResultGroup[]
+     * @return array
      */
-    public function getGroupedResults()
+    public function getActivators()
     {
-        return $this->data['groupedResults'];
+        return $this->data['activators'];
+    }
+
+    /**
+     * Get all decorators
+     *
+     * @return array
+     */
+    public function getDecorators()
+    {
+        return $this->data['decorators'];
     }
 
     /**
@@ -100,6 +98,6 @@ class FeatureDataCollector extends DataCollector
      */
     public function reset()
     {
-        $this->resultBag->clear();
+        $this->data = [];
     }
 }

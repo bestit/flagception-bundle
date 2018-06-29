@@ -2,6 +2,7 @@
 
 namespace Flagception\Tests\FlagceptionBundle\Activator;
 
+use Flagception\Activator\ChainActivator;
 use Flagception\Bundle\FlagceptionBundle\Activator\ProfilerChainActivator;
 use Flagception\Bundle\FlagceptionBundle\Bag\FeatureResultBag;
 use Flagception\Bundle\FlagceptionBundle\Model\Result;
@@ -27,6 +28,17 @@ class ProfilerChainActivatorTest extends TestCase
     {
         $activator = new ProfilerChainActivator(new FeatureResultBag());
         static::assertInstanceOf(FeatureActivatorInterface::class, $activator);
+    }
+
+    /**
+     * Test extends change activator
+     *
+     * @return void
+     */
+    public function testExtendsChainActivator()
+    {
+        $activator = new ProfilerChainActivator(new FeatureResultBag());
+        static::assertInstanceOf(ChainActivator::class, $activator);
     }
 
     /**
@@ -98,5 +110,21 @@ class ProfilerChainActivatorTest extends TestCase
             new Result('feature_abc', false, $context, 'array'),
             new Result('feature_abc', true, $context, 'array')
         ], $bag->all());
+    }
+
+    /**
+     * Test add and get activators
+     *
+     * @return void
+     */
+    public function testAddAndGet()
+    {
+        $decorator = new ProfilerChainActivator(new FeatureResultBag());
+        $decorator->add($fakeActivator1 = new ArrayActivator());
+        $decorator->add($fakeActivator2 = new ArrayActivator([]));
+
+        // Should be the same sorting
+        static::assertSame($fakeActivator1, $decorator->getActivators()[0]);
+        static::assertSame($fakeActivator2, $decorator->getActivators()[1]);
     }
 }
