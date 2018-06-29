@@ -42,18 +42,7 @@ class FlagceptionExtensionTest extends TestCase
      */
     public function testAnnotationSubscriberDisabled()
     {
-        $config = [
-            [
-                'features' => [
-                    'feature_foo' => [
-                        'default' => true
-                    ],
-                    'feature_bar' => [
-                        'default' => false
-                    ]
-                ]
-            ]
-        ];
+        $config = [];
 
         $extension = new FlagceptionExtension();
         $extension->load($config, $this->container);
@@ -72,14 +61,6 @@ class FlagceptionExtensionTest extends TestCase
             [
                 'annotation' => [
                     'enable' => true
-                ],
-                'features' => [
-                    'feature_foo' => [
-                        'default' => true
-                    ],
-                    'feature_bar' => [
-                        'default' => false
-                    ]
                 ]
             ]
         ];
@@ -102,14 +83,6 @@ class FlagceptionExtensionTest extends TestCase
             [
                 'annotation' => [
                     'enable' => 'true'
-                ],
-                'features' => [
-                    'feature_foo' => [
-                        'default' => true
-                    ],
-                    'feature_bar' => [
-                        'default' => false
-                    ]
                 ]
             ]
         ];
@@ -132,14 +105,6 @@ class FlagceptionExtensionTest extends TestCase
             [
                 'routing_metadata' => [
                     'enable' => false
-                ],
-                'features' => [
-                    'feature_foo' => [
-                        'default' => true
-                    ],
-                    'feature_bar' => [
-                        'default' => false
-                    ]
                 ]
             ]
         ];
@@ -157,18 +122,7 @@ class FlagceptionExtensionTest extends TestCase
      */
     public function testRoutingMetadataSubscriberEnabled()
     {
-        $config = [
-            [
-                'features' => [
-                    'feature_foo' => [
-                        'default' => true
-                    ],
-                    'feature_bar' => [
-                        'default' => false
-                    ]
-                ]
-            ]
-        ];
+        $config = [];
 
         $extension = new FlagceptionExtension();
         $extension->load($config, $this->container);
@@ -188,14 +142,6 @@ class FlagceptionExtensionTest extends TestCase
             [
                 'routing_metadata' => [
                     'enable' => 'true'
-                ],
-                'features' => [
-                    'feature_foo' => [
-                        'default' => true
-                    ],
-                    'feature_bar' => [
-                        'default' => false
-                    ]
                 ]
             ]
         ];

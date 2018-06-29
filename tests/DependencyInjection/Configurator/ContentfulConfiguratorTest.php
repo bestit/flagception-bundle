@@ -4,6 +4,8 @@ namespace Flagception\Tests\FlagceptionBundle\DependencyInjection\Configurator;
 
 use Flagception\Bundle\FlagceptionBundle\DependencyInjection\Configurator\ContentfulConfigurator;
 use Flagception\Bundle\FlagceptionBundle\DependencyInjection\FlagceptionExtension;
+use LogicException;
+use phpmock\phpunit\PHPMock;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
@@ -18,6 +20,8 @@ use Symfony\Component\DependencyInjection\Reference;
  */
 class ContentfulConfiguratorTest extends TestCase
 {
+    use PHPMock;
+
     /**
      * The container
      *
@@ -59,6 +63,40 @@ class ContentfulConfiguratorTest extends TestCase
         $extension->load($config, $this->container);
 
         static::assertFalse($this->container->hasDefinition('flagception.activator.contentful_activator'));
+    }
+
+    /**
+     * Test activator raise exception if missing library
+     *
+     * @return void
+     */
+    public function testActivatorNeedsLibrary()
+    {
+        $this->expectException(LogicException::class);
+
+        $config = [
+            [
+                'activators' => [
+                    'contentful' => [
+                        'enable' => true,
+                        'client_id' => 'foobar'
+                    ]
+                ]
+            ]
+        ];
+
+        $classExists = $this->getFunctionMock(
+            'Flagception\Bundle\FlagceptionBundle\DependencyInjection\Configurator',
+            'class_exists'
+        );
+
+        $classExists
+            ->expects(static::once())
+            ->with('Flagception\Contentful\Activator\ContentfulActivator')
+            ->willReturn(false);
+
+        $extension = new FlagceptionExtension();
+        $extension->load($config, $this->container);
     }
 
     /**

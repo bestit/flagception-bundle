@@ -22,6 +22,7 @@
     "symfony/twig-bridge": ">=2.7",
     "flagception/contentful-activator": "^1.0",
     "phpunit/phpunit": "^5.5",
+    "php-mock/php-mock-phpunit": "^1.1",
     "squizlabs/php_codesniffer": "^2.8",
     "php-coveralls/php-coveralls": "^1.0"
   },
