@@ -8,7 +8,6 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Loader;
-use Symfony\Component\DependencyInjection\Reference;
 
 /**
  * Class CookieConfiguratorTest
@@ -236,8 +235,7 @@ class CookieConfiguratorTest extends TestCase
                     'feature_foobazz'
                 ],
                 'flagception',
-                ',',
-                new Reference('request_stack')
+                ','
             ],
             $this->container->getDefinition('flagception.activator.cookie_activator')->getArguments()
         );
@@ -269,8 +267,7 @@ class CookieConfiguratorTest extends TestCase
             [
                 [],
                 $name,
-                $separator,
-                new Reference('request_stack')
+                $separator
             ],
             $this->container->getDefinition('flagception.activator.cookie_activator')->getArguments()
         );
