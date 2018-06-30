@@ -2,9 +2,11 @@
 
 namespace Flagception\Bundle\FlagceptionBundle\Profiler;
 
+use Flagception\Activator\FeatureActivatorInterface;
 use Flagception\Bundle\FlagceptionBundle\Activator\ProfilerChainActivator;
 use Exception;
 use Flagception\Decorator\ChainDecorator;
+use Flagception\Decorator\ContextDecoratorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;
@@ -50,8 +52,12 @@ class FeatureDataCollector extends DataCollector
     {
         $this->data = [
             'requests' => $this->chainActivator->getRequestLog(),
-            'activators' => $this->chainActivator->getActivators(),
-            'decorators' => $this->chainDecorator->getDecorators()
+            'activators' => array_map(function (FeatureActivatorInterface $activator) {
+                return $activator->getName();
+            }, $this->chainActivator->getActivators()),
+            'decorators' => array_map(function (ContextDecoratorInterface $decorator) {
+                return $decorator->getName();
+            }, $this->chainDecorator->getDecorators()),
         ];
     }
 

@@ -27,78 +27,106 @@
 
 {% block panel %}
     <h2>Feature states</h2>
-    <table>
-        <thead>
-        <tr>
-            <th class="col">Feature name</th>
-            <th class="col">Amount requests</th>
-            <th class="col">Amount active</th>
-            <th class="col">Amount inactive</th>
-            <th class="col">Activators</th>
-        </tr>
-        </thead>
-        {% for name, request in collector.requests %}
-            <tr>
-                <td>{{ name }}</td>
-                <td>{{ request.requests }}</td>
-                <td>{{ request.activeRequests }}</td>
-                <td>{{ request.inactiveRequests }}</td>
-                <td>{{ request.activators|join(', ') }}</td>
-            </tr>
-        {% endfor %}
-    </table>
+    <div class="sf-tabs">
+        <div class="tab">
+            <h3 class="tab-title">Feature states <span class="badge status-">{{ collector.requests|length }}</span></h3>
 
-    <h2>Activators</h2>
-    <table>
-        <thead>
-        <tr>
-            <th class="col">Priority</th>
-            <th class="col">Name</th>
-        </tr>
-        </thead>
-        {% for priority, activator in collector.activators %}
-            <tr>
-                <td>{{ priority }}</td>
-                <td>{{ activator.name }}</td>
-            </tr>
-        {% endfor %}
-    </table>
+            <div class="tab-content">
+                <table>
+                    <thead>
+                    <tr>
+                        <th class="col">Feature name</th>
+                        <th class="col">Amount requests</th>
+                        <th class="col">Amount active</th>
+                        <th class="col">Amount inactive</th>
+                        <th class="col">Activators</th>
+                    </tr>
+                    </thead>
+                    {% for name, request in collector.requests %}
+                        <tr>
+                            <td>{{ name }}</td>
+                            <td>{{ request.requests }}</td>
+                            <td>{{ request.activeRequests }}</td>
+                            <td>{{ request.inactiveRequests }}</td>
+                            <td>{{ request.activators|join(', ') }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+        <div class="tab">
+            <h3 class="tab-title">Activators <span class="badge status-">{{ collector.activators|length }}</span></h3>
 
-    <h2>Decorators</h2>
-    <table>
-        <thead>
-        <tr>
-            <th class="col">Priority</th>
-            <th class="col">Name</th>
-        </tr>
-        </thead>
-        {% for priority, decorator in collector.decorators %}
-            <tr>
-                <td>{{ priority }}</td>
-                <td>{{ decorator.name }}</td>
-            </tr>
-        {% endfor %}
-    </table>
+            <div class="tab-content">
+                <table>
+                    <thead>
+                    <tr>
+                        <th class="col">Priority</th>
+                        <th class="col">Name</th>
+                    </tr>
+                    </thead>
+                    {% for priority, name in collector.activators %}
+                        <tr>
+                            <td>{{ priority }}</td>
+                            <td>{{ name }}</td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="2">No activators defined</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+        <div class="tab">
+            <h3 class="tab-title">Decorators <span class="badge status-">{{ collector.decorators|length }}</span></h3>
 
-    <h2>Log</h2>
-    <table>
-        <thead>
-        <tr>
-            <th class="col">Feature name</th>
-            <th class="col">Active</th>
-            <th class="col">Activator</th>
-            <th class="col">Context</th>
-        </tr>
-        </thead>
-        {% for name, request in collector.requests %}
-            {% for stack in request.stack %}
-                <tr>
-                    <td>{{ name }}</td>
-                    <td>{{ stack.active ? 'true' : 'false' }}</td>
-                    <td>{{ stack.activator }}</td>
-                    <td>{{ dump(stack.context.all) }}</td>
-                </tr>
-            {% endfor %}
-        {% endfor %}
-    </table>
+            <div class="tab-content">
+                <table>
+                    <thead>
+                    <tr>
+                        <th class="col">Priority</th>
+                        <th class="col">Name</th>
+                    </tr>
+                    </thead>
+                    {% for priority, name in collector.decorators %}
+                        <tr>
+                            <td>{{ priority }}</td>
+                            <td>{{ name }}</td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="2">No decorators defined</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+        <div class="tab">
+            <h3 class="tab-title">Log</h3>
+
+            <div class="tab-content">
+                <table>
+                    <thead>
+                    <tr>
+                        <th class="col">Feature name</th>
+                        <th class="col">Active</th>
+                        <th class="col">Activator</th>
+                        <th class="col">Context</th>
+                    </tr>
+                    </thead>
+                    {% for name, request in collector.requests %}
+                        {% for stack in request.stack %}
+                            <tr>
+                                <td>{{ name }}</td>
+                                <td>{{ stack.result ? 'true' : 'false' }}</td>
+                                <td>{{ stack.activator }}</td>
+                                <td>{{ dump(stack.context.all) }}</td>
+                            </tr>
+                        {% endfor %}
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+    </div>
 {% endblock %}

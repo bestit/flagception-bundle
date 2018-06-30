@@ -68,7 +68,7 @@ class ProfilerChainActivator extends ChainActivator
                 'activator' => $activator->getName()
             ];
 
-            if (!in_array($activator->getName(), $log['activators'], true)) {
+            if ($result === true && !in_array($activator->getName(), $log['activators'], true)) {
                 $log['activators'][] = $activator->getName();
             }
 
