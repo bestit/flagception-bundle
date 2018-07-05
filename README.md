@@ -1,6 +1,6 @@
 # Flagception
 **Feature toggle bundle on steroids!** Flagception is a simple and powerful feature toggle system for php.
-This bundle integrates the [Flagception PHP Libary](https://packagist.org/packages/flagception/flagception) for symfony 2.7 to 4.0 (and php 5.6 to php7.2).
+This bundle integrates the [Flagception PHP Libary](https://packagist.org/packages/flagception/flagception) for symfony 2.7 to 4.1 (and php 5.6 to php7.2).
 
 [![Latest Stable Version](https://poser.pugx.org/flagception/flagception-bundle/v/stable)](https://packagist.org/packages/flagception/flagception-bundle)
 [![Coverage Status](https://coveralls.io/repos/github/bestit/flagception-bundle/badge.svg?branch=master)](https://coveralls.io/github/bestit/flagception-bundle?branch=master)

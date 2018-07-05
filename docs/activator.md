@@ -8,6 +8,8 @@ Just create a service class, implements `FeatureActivatorInterface`, tag it with
 priority tag. The feature manager iterate through all activators and check the state with the `isActive` method until one activator 
 returns true. If an activator returns true, no further activators will be requested.
 
+This bundle supports [autoconfiguration](https://symfony.com/blog/new-in-symfony-3-3-service-autoconfiguration) for `FeatureActivatorInterface` from Symfony 3.3.
+
 Example class to activate all features for admins:
 ```php
 # AdminActivator.php

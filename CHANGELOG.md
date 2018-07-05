@@ -10,6 +10,8 @@
 ### Added
 - \#26 Add feature name advice in documentation @migo315
 - Add `php-mock` as dev dependency and add missing contentful configurator test @migo315
+- \#31 Add support for auto configuration for `FeatureActivatorInterface` @migo315
+- \#32 Add support for auto configuration for `ContectDecoratorInterface` @migo315
 
 ### Removed
 - Remove unneeded models and bags (just internal stuff) @migo315
