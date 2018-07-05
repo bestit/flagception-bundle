@@ -14,7 +14,7 @@
     "php": "^5.6||^7.0",
     "symfony/framework-bundle": ">=2.7",
     "doctrine/common": "^2.3",
-    "flagception/flagception": "^1.1"
+    "flagception/flagception": "^1.2"
   },
   "require-dev": {
     "phing/phing": "^2.15",

@@ -2,8 +2,11 @@
 
 namespace Flagception\Tests\FlagceptionBundle\Profiler;
 
-use Flagception\Bundle\FlagceptionBundle\Bag\FeatureResultBag;
-use Flagception\Bundle\FlagceptionBundle\Model\Result;
+use Flagception\Activator\ArrayActivator;
+use Flagception\Activator\CookieActivator;
+use Flagception\Bundle\FlagceptionBundle\Activator\TraceableChainActivator;
+use Flagception\Decorator\ArrayDecorator;
+use Flagception\Decorator\ChainDecorator;
 use Flagception\Model\Context;
 use Flagception\Bundle\FlagceptionBundle\Profiler\FeatureDataCollector;
 use PHPUnit\Framework\TestCase;
@@ -25,7 +28,7 @@ class FeatureDataCollectorTest extends TestCase
      */
     public function testGetName()
     {
-        $collector = new FeatureDataCollector(new FeatureResultBag());
+        $collector = new FeatureDataCollector(new TraceableChainActivator(), new ChainDecorator());
         static::assertEquals('flagception', $collector->getName());
     }
 
@@ -36,13 +39,8 @@ class FeatureDataCollectorTest extends TestCase
      */
     public function testReset()
     {
-        $collector = new FeatureDataCollector($bag = new FeatureResultBag());
-        $bag->add(new Result('feature_abc', true, new Context(), 'config'));
-
-        static::assertEquals(1, count($bag->all()));
-
+        $collector = new FeatureDataCollector(new TraceableChainActivator(), new ChainDecorator());
         $collector->reset();
-        static::assertEquals(0, count($bag->all()));
     }
 
     /**
@@ -52,28 +50,197 @@ class FeatureDataCollectorTest extends TestCase
      */
     public function testCollect()
     {
-        $bag = new FeatureResultBag();
-        $bag->add($result1 = new Result('feature_abc', true, new Context(), 'config'));
-        $bag->add($result1 = new Result('feature_abc', true, new Context(), 'array'));
-        $bag->add($result2 = new Result('feature_abc', false, new Context(), 'config'));
-        $bag->add($result3 = new Result('feature_def', true, new Context(), 'config'));
+        $collector = new FeatureDataCollector(
+            $chainActivator = $this->createMock(TraceableChainActivator::class),
+            $chainDecorator = new ChainDecorator()
+        );
 
-        $collector = new FeatureDataCollector($bag);
+        $chainDecorator->add(new ArrayDecorator());
+
+        $chainActivator
+            ->expects(static::once())
+            ->method('getActivators')
+            ->willReturn([new ArrayActivator(), new CookieActivator([])]);
+
+        $chainActivator
+            ->expects(static::exactly(2))
+            ->method('getTrace')
+            ->willReturn([
+                [
+                    'feature' => 'abc',
+                    'context' => new Context(),
+                    'result' => true,
+                    'stack' => [
+                        'array' => false,
+                        'cookie' => true
+                    ]
+                ],
+                [
+                    'feature' => 'abc',
+                    'context' => new Context(),
+                    'result' => true,
+                    'stack' => [
+                        'array' => false,
+                        'cookie' => true
+                    ]
+                ],
+                [
+                    'feature' => 'def',
+                    'context' => new Context(),
+                    'result' => false,
+                    'stack' => [
+                        'array' => false,
+                        'cookie' => false
+                    ]
+                ],
+                [
+                    'feature' => 'ywz',
+                    'context' => new Context(),
+                    'result' => true,
+                    'stack' => [
+                        'array' => true
+                    ]
+                ],
+                [
+                    'feature' => 'corrupt',
+                    'context' => new Context(),
+                    'result' => true,
+                    'stack' => [
+                        'array' => false,
+                        'cookie' => true
+                    ]
+                ],
+                [
+                    'feature' => 'corrupt',
+                    'context' => new Context(),
+                    'result' => false,
+                    'stack' => [
+                        'array' => false,
+                        'cookie' => false
+                    ]
+                ]
+            ]);
+
         $collector->collect(new Request(), new Response());
 
-        static::assertEquals($bag->all(), $collector->getResults());
+        static::assertEquals([
+            'features' => 4,
+            'activeFeatures' => 2,
+            'inactiveFeatures' => 1,
+            'corruptFeatures' => 1
+        ], $collector->getSummary());
 
-        $resultGroups = $collector->getGroupedResults();
-        static::assertEquals('feature_def', $resultGroups['feature_def']->getFeatureName());
-        static::assertEquals(1, $resultGroups['feature_def']->getAmountRequests());
-        static::assertEquals(0, $resultGroups['feature_def']->getAmountInactive());
-        static::assertEquals(1, $resultGroups['feature_def']->getAmountActive());
-        static::assertEquals(['config'], $resultGroups['feature_def']->getActivators());
+        static::assertEquals([
+            'array' => [
+                'priority' => 1,
+                'name' => 'array'
+            ]
+        ], $collector->getDecorators());
 
-        static::assertEquals('feature_abc', $resultGroups['feature_abc']->getFeatureName());
-        static::assertEquals(3, $resultGroups['feature_abc']->getAmountRequests());
-        static::assertEquals(1, $resultGroups['feature_abc']->getAmountInactive());
-        static::assertEquals(2, $resultGroups['feature_abc']->getAmountActive());
-        static::assertEquals(['config', 'array'], $resultGroups['feature_abc']->getActivators());
+        static::assertEquals([
+            'array' => [
+                'priority' => 1,
+                'name' => 'array',
+                'requests' => 6,
+                'activeRequests' => 1,
+                'inactiveRequests' => 5,
+            ],
+            'cookie' => [
+                'priority' => 2,
+                'name' => 'cookie',
+                'requests' => 5,
+                'activeRequests' => 3,
+                'inactiveRequests' => 2,
+            ]
+        ], $collector->getActivators());
+
+        static::assertEquals([
+            [
+                'feature' => 'abc',
+                'context' => new Context(),
+                'result' => true,
+                'stack' => [
+                    'array' => false,
+                    'cookie' => true
+                ]
+            ],
+            [
+                'feature' => 'abc',
+                'context' => new Context(),
+                'result' => true,
+                'stack' => [
+                    'array' => false,
+                    'cookie' => true
+                ]
+            ],
+            [
+                'feature' => 'def',
+                'context' => new Context(),
+                'result' => false,
+                'stack' => [
+                    'array' => false,
+                    'cookie' => false
+                ]
+            ],
+            [
+                'feature' => 'ywz',
+                'context' => new Context(),
+                'result' => true,
+                'stack' => [
+                    'array' => true
+                ]
+            ],
+            [
+                'feature' => 'corrupt',
+                'context' => new Context(),
+                'result' => true,
+                'stack' => [
+                    'array' => false,
+                    'cookie' => true
+                ]
+            ],
+            [
+                'feature' => 'corrupt',
+                'context' => new Context(),
+                'result' => false,
+                'stack' => [
+                    'array' => false,
+                    'cookie' => false
+                ]
+            ]
+        ], $collector->getTrace());
+
+        static::assertEquals([
+            'abc' => [
+                'requests' => 2,
+                'activeRequests' => 2,
+                'inactiveRequests' => 0,
+                'activators' => [
+                    'cookie'
+                ]
+            ],
+            'def' => [
+                'requests' => 1,
+                'activeRequests' => 0,
+                'inactiveRequests' => 1,
+                'activators' => []
+            ],
+            'ywz' => [
+                'requests' => 1,
+                'activeRequests' => 1,
+                'inactiveRequests' => 0,
+                'activators' => [
+                    'array'
+                ]
+            ],
+            'corrupt' => [
+                'requests' => 2,
+                'activeRequests' => 1,
+                'inactiveRequests' => 1,
+                'activators' => [
+                    'cookie'
+                ]
+            ],
+        ], $collector->getRequests());
     }
 }

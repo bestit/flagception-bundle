@@ -2,9 +2,17 @@
 ### Fix
 - \#27 Fix route xml in documentation @migo315
 
+### Changed
+- \#35 Swap own cookie activator with the new flagception sdk cookie activator @migo315
+- Refactor profiler and data collector  @migo315
+- Swap old `ProfilerChainActivator` with new `TraceableChainActivator` @migo315
+
 ### Added
 - \#26 Add feature name advice in documentation @migo315
-- Add `php-mock` as dev dependency and add missing contentful configurator test
+- Add `php-mock` as dev dependency and add missing contentful configurator test @migo315
+
+### Removed
+- Remove unneeded models and bags (just internal stuff) @migo315
 
 ## [3.0.1]
 ### Fix

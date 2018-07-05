@@ -2,11 +2,10 @@
 
 namespace Flagception\Bundle\FlagceptionBundle\DependencyInjection\Configurator;
 
-use Flagception\Bundle\FlagceptionBundle\Activator\CookieActivator;
+use Flagception\Activator\CookieActivator;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
-use Symfony\Component\DependencyInjection\Reference;
 
 /**
  * Class CookieConfigurator
@@ -41,7 +40,6 @@ class CookieConfigurator implements ActivatorConfiguratorInterface
         $definition->addArgument($cookieFeatures);
         $definition->addArgument($config['name']);
         $definition->addArgument($config['separator']);
-        $definition->addArgument(new Reference('request_stack'));
 
         $definition->addTag('flagception.activator', [
            'priority' => $config['priority']
