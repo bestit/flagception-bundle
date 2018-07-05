@@ -3,7 +3,9 @@
 namespace Flagception\Bundle\FlagceptionBundle\DependencyInjection;
 
 use Exception;
+use Flagception\Activator\FeatureActivatorInterface;
 use Flagception\Bundle\FlagceptionBundle\DependencyInjection\Configurator\ActivatorConfiguratorInterface;
+use Flagception\Decorator\ContextDecoratorInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
@@ -47,6 +49,16 @@ class FlagceptionExtension extends Extension
             }
 
             $configurator->addActivator($container, $config['activators'][$name], $config['features']);
+        }
+
+        if (method_exists($container, 'registerForAutoconfiguration') === true) {
+            $container
+                ->registerForAutoconfiguration(FeatureActivatorInterface::class)
+                ->addTag('flagception.activator');
+
+            $container
+                ->registerForAutoconfiguration(ContextDecoratorInterface::class)
+                ->addTag('flagception.context_decorator');
         }
     }
 

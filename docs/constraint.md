@@ -72,6 +72,8 @@ For adding a global variable, just create a ContextDecorator class and implement
 You have to create two methods. The `getName` method return the ContextDecorator name and the `decorate` method
 will extend the context data with your variables. Remember to tag the service with `flagception.context_decorator`.
 
+This bundle supports [autoconfiguration](https://symfony.com/blog/new-in-symfony-3-3-service-autoconfiguration) for `ContextDecoratorInterface` from Symfony 3.3.
+
 As the feature manager may serializes context data in future (eg. for caching), 
 you should not store objects that cannot be serialized (like PDO objects) or you need to provide your own serialize() method.
 
