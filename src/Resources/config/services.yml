@@ -32,14 +32,6 @@ services:
                 template: '@Flagception/profiler/layout.html.twig'
                 id:       'flagception'
         public: false
-        
-    flagception.bag.feature_result_bag:
-        class: Flagception\Bundle\FlagceptionBundle\Bag\FeatureResultBag
-        public: false
-
-    flagception.bag.feature_config_bag:
-        class: Flagception\Bundle\FlagceptionBundle\Bag\FeatureConfigBag
-        public: false
 
     flagception.constraint.constraint_resolver:
         class: Flagception\Constraint\ConstraintResolver
@@ -64,9 +56,7 @@ services:
         public: false
 
     flagception.activator.chain_activator:
-        class: Flagception\Bundle\FlagceptionBundle\Activator\ProfilerChainActivator
-        arguments:
-            - '@flagception.bag.feature_result_bag'
+        class: Flagception\Bundle\FlagceptionBundle\Activator\TraceableChainActivator
         public: false
 
     flagception.decorator.chain_decorator:

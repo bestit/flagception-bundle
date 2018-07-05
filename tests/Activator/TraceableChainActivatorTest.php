@@ -3,21 +3,21 @@
 namespace Flagception\Tests\FlagceptionBundle\Activator;
 
 use Flagception\Activator\ChainActivator;
-use Flagception\Bundle\FlagceptionBundle\Activator\ProfilerChainActivator;
-use Flagception\Bundle\FlagceptionBundle\Bag\FeatureResultBag;
-use Flagception\Bundle\FlagceptionBundle\Model\Result;
+use Flagception\Activator\CookieActivator;
+use Flagception\Activator\EnvironmentActivator;
+use Flagception\Bundle\FlagceptionBundle\Activator\TraceableChainActivator;
 use Flagception\Activator\ArrayActivator;
 use Flagception\Activator\FeatureActivatorInterface;
 use Flagception\Model\Context;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Class ProfilerChainActivatorTest
+ * Tests the TraceableChainActivator
  *
  * @author Michel Chowanski <michel.chowanski@bestit-online.de>
  * @package Flagception\Tests\FlagceptionBundle\Activator
  */
-class ProfilerChainActivatorTest extends TestCase
+class TraceableChainActivatorTest extends TestCase
 {
     /**
      * Test implement interface
@@ -26,18 +26,18 @@ class ProfilerChainActivatorTest extends TestCase
      */
     public function testImplementInterface()
     {
-        $activator = new ProfilerChainActivator(new FeatureResultBag());
+        $activator = new TraceableChainActivator();
         static::assertInstanceOf(FeatureActivatorInterface::class, $activator);
     }
 
     /**
-     * Test extends change activator
+     * Test extends chain activator
      *
      * @return void
      */
     public function testExtendsChainActivator()
     {
-        $activator = new ProfilerChainActivator(new FeatureResultBag());
+        $activator = new TraceableChainActivator();
         static::assertInstanceOf(ChainActivator::class, $activator);
     }
 
@@ -48,8 +48,8 @@ class ProfilerChainActivatorTest extends TestCase
      */
     public function testName()
     {
-        $activator = new ProfilerChainActivator(new FeatureResultBag());
-        static::assertEquals('profiler_chain', $activator->getName());
+        $activator = new TraceableChainActivator();
+        static::assertEquals('chain', $activator->getName());
     }
 
     /**
@@ -59,7 +59,7 @@ class ProfilerChainActivatorTest extends TestCase
      */
     public function testNoActivators()
     {
-        $activator = new ProfilerChainActivator(new FeatureResultBag());
+        $activator = new TraceableChainActivator();
         static::assertFalse($activator->isActive('feature_abc', new Context()));
     }
 
@@ -70,20 +70,27 @@ class ProfilerChainActivatorTest extends TestCase
      */
     public function testNoActivatorsReturnTrue()
     {
-        $activator = new ProfilerChainActivator($bag = new FeatureResultBag());
+        $activator = new TraceableChainActivator();
         $activator->add(new ArrayActivator([
             'feature_def'
         ]));
-        $activator->add(new ArrayActivator([
+        $activator->add(new CookieActivator([
             'feature_ghi'
         ]));
 
         static::assertFalse($activator->isActive('feature_abc', $context = new Context()));
 
         static::assertEquals([
-            new Result('feature_abc', false, $context, 'array'),
-            new Result('feature_abc', false, $context, 'array')
-        ], $bag->all());
+            [
+                'feature' => 'feature_abc',
+                'context' => $context,
+                'result' => false,
+                'stack' => [
+                    'array' => false,
+                    'cookie' => false
+                ]
+            ]
+        ], $activator->getTrace());
     }
 
     /**
@@ -93,23 +100,30 @@ class ProfilerChainActivatorTest extends TestCase
      */
     public function testOneActivatorsReturnTrue()
     {
-        $activator = new ProfilerChainActivator($bag = new FeatureResultBag());
-        $activator->add(new ArrayActivator([
+        $activator = new TraceableChainActivator();
+        $activator->add(new CookieActivator([
             'feature_def'
         ]));
         $activator->add(new ArrayActivator([
             'feature_abc'
         ]));
-        $activator->add(new ArrayActivator([
+        $activator->add(new EnvironmentActivator([
             'feature_hij'
         ]));
 
         static::assertTrue($activator->isActive('feature_abc', $context = new Context()));
 
         static::assertEquals([
-            new Result('feature_abc', false, $context, 'array'),
-            new Result('feature_abc', true, $context, 'array')
-        ], $bag->all());
+            [
+                'feature' => 'feature_abc',
+                'context' => $context,
+                'result' => true,
+                'stack' => [
+                    'cookie' => false,
+                    'array' => true
+                ]
+            ]
+        ], $activator->getTrace());
     }
 
     /**
@@ -119,7 +133,7 @@ class ProfilerChainActivatorTest extends TestCase
      */
     public function testAddAndGet()
     {
-        $decorator = new ProfilerChainActivator(new FeatureResultBag());
+        $decorator = new TraceableChainActivator();
         $decorator->add($fakeActivator1 = new ArrayActivator());
         $decorator->add($fakeActivator2 = new ArrayActivator([]));
 
