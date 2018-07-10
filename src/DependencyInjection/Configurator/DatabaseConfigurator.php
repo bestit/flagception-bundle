@@ -78,6 +78,19 @@ class DatabaseConfigurator implements ActivatorConfiguratorInterface
     {
         $node
             ->addDefaultsIfNotSet(['enable' => true])
+            ->validate()
+                ->ifTrue(function ($config) {
+                    if ($config['enable'] === false) {
+                        return false;
+                    }
+
+                    return !isset($config['url'])
+                        && !isset($config['pdo'])
+                        && !isset($config['dbal'])
+                        && !isset($config['credentials']);
+                })
+                ->thenInvalid('You must either set the url, pdo, dbal or credentials field.')
+            ->end()
             ->children()
                 ->booleanNode('enable')
                     ->beforeNormalization()
@@ -86,10 +99,10 @@ class DatabaseConfigurator implements ActivatorConfiguratorInterface
                             return filter_var($value, FILTER_VALIDATE_BOOLEAN);
                         })
                     ->end()
-                    ->defaultTrue()
+                    ->defaultFalse()
                 ->end()
                 ->integerNode('priority')
-                    ->defaultValue(255)
+                    ->defaultValue(220)
                 ->end()
                 ->scalarNode('url')
                     ->info('Connection string for the database')
@@ -101,21 +114,25 @@ class DatabaseConfigurator implements ActivatorConfiguratorInterface
                     ->info('Service with dbal instance')
                 ->end()
                 ->arrayNode('credentials')
-                    ->addDefaultsIfNotSet()
                     ->children()
                         ->scalarNode('dbname')
+                            ->isRequired()
                             ->cannotBeEmpty()
                         ->end()
                         ->scalarNode('user')
+                            ->isRequired()
                             ->cannotBeEmpty()
                         ->end()
                         ->scalarNode('password')
+                            ->isRequired()
                             ->cannotBeEmpty()
                         ->end()
                         ->scalarNode('host')
+                            ->isRequired()
                             ->cannotBeEmpty()
                         ->end()
                         ->scalarNode('driver')
+                            ->isRequired()
                             ->cannotBeEmpty()
                         ->end()
                     ->end()

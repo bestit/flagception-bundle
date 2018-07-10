@@ -23,3 +23,8 @@ services:
         class: Flagception\Bundle\FlagceptionBundle\DependencyInjection\Configurator\CookieConfigurator
         tags:
             - { name: flagception.configurator }
+
+    flagception.configurator.database_configurator:
+        class: Flagception\Bundle\FlagceptionBundle\DependencyInjection\Configurator\DatabaseConfigurator
+        tags:
+            - { name: flagception.configurator }
