@@ -77,13 +77,9 @@ class DatabaseConfigurator implements ActivatorConfiguratorInterface
     public function addConfiguration(ArrayNodeDefinition $node)
     {
         $node
-            ->addDefaultsIfNotSet(['enable' => true])
+            ->addDefaultsIfNotSet(['enable' => false])
             ->validate()
                 ->ifTrue(function ($config) {
-                    if ($config['enable'] === false) {
-                        return false;
-                    }
-
                     return !isset($config['url'])
                         && !isset($config['pdo'])
                         && !isset($config['dbal'])

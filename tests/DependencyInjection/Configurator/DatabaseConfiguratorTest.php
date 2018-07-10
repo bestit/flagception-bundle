@@ -4,6 +4,8 @@ namespace Flagception\Tests\FlagceptionBundle\DependencyInjection\Configurator;
 
 use Flagception\Bundle\FlagceptionBundle\DependencyInjection\Configurator\DatabaseConfigurator;
 use Flagception\Bundle\FlagceptionBundle\DependencyInjection\FlagceptionExtension;
+use LogicException;
+use phpmock\phpunit\PHPMock;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -18,6 +20,8 @@ use Symfony\Component\DependencyInjection\Loader;
  */
 class DatabaseConfiguratorTest extends TestCase
 {
+    use PHPMock;
+
     /**
      * The container
      *
@@ -385,5 +389,39 @@ class DatabaseConfiguratorTest extends TestCase
         $extension->load($config, $this->container);
 
         static::assertTrue($this->container->hasDefinition('flagception.activator.database_activator.cache'));
+    }
+
+    /**
+     * Test activator raise exception if missing library
+     *
+     * @return void
+     */
+    public function testActivatorNeedsLibrary()
+    {
+        $this->expectException(LogicException::class);
+
+        $config = [
+            [
+                'activators' => [
+                    'database' => [
+                        'enable' => true,
+                        'url' => 'foobar'
+                    ]
+                ]
+            ]
+        ];
+
+        $classExists = $this->getFunctionMock(
+            'Flagception\Bundle\FlagceptionBundle\DependencyInjection\Configurator',
+            'class_exists'
+        );
+
+        $classExists
+            ->expects(static::once())
+            ->with('Flagception\Database\Activator\DatabaseActivator')
+            ->willReturn(false);
+
+        $extension = new FlagceptionExtension();
+        $extension->load($config, $this->container);
     }
 }
