@@ -1,4 +1,4 @@
-## Unreleased
+## [3.1.0]
 ### Fix
 - \#27 Fix route xml in documentation @migo315
 
@@ -6,6 +6,7 @@
 - \#35 Swap own cookie activator with the new flagception sdk cookie activator @migo315
 - Refactor profiler and data collector  @migo315
 - Swap old `ProfilerChainActivator` with new `TraceableChainActivator` @migo315
+- Update [Flagception SDK](https://packagist.org/packages/flagception/flagception) to version 1.3.0 @migo315
 
 ### Added
 - \#26 Add feature name advice in documentation @migo315
@@ -13,6 +14,7 @@
 - \#31 Add support for auto configuration for `FeatureActivatorInterface` @migo315
 - \#32 Add support for auto configuration for `ContectDecoratorInterface` @migo315
 - Add caching option for `ContentfulActivator` @migo315
+- Add configuration for the new [DatabaseActivator](https://packagist.org/packages/flagception/database-activator) @migo315
 
 ### Removed
 - Remove unneeded models and bags (just internal stuff) @migo315
