@@ -24,6 +24,7 @@
     "phing/phing": "^2.15",
     "symfony/phpunit-bridge": ">=2.7",
     "symfony/twig-bridge": ">=2.7",
+    "symfony/security-bundle": ">=2.7",
     "flagception/contentful-activator": "^1.0",
     "flagception/database-activator": "^1.0",
     "phpunit/phpunit": "^5.5",

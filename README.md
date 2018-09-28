@@ -25,6 +25,7 @@ Documentation
 * [Constraints](docs/constraint.md)
 * [Environment variables](docs/environment.md)
 * [Cookies](docs/cookie.md)
+* [User roles](docs/role.md)
 * [Database](docs/database.md)
 * [Activators](docs/activator.md)
 * [Contenftul](docs/contentful.md)

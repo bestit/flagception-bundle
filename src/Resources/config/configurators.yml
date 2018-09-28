@@ -4,6 +4,11 @@ services:
         tags:
             - { name: flagception.configurator }
 
+    flagception.configurator.role_configurator:
+        class: Flagception\Bundle\FlagceptionBundle\DependencyInjection\Configurator\RoleConfigurator
+        tags:
+            - { name: flagception.configurator }
+
     flagception.configurator.constraint_configurator:
         class: Flagception\Bundle\FlagceptionBundle\DependencyInjection\Configurator\ConstraintConfigurator
         tags:
