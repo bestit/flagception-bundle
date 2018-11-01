@@ -1,3 +1,16 @@
+## [3.1.1]
+### Changed
+- \#45 Replace `symfony/framework-bundle` and `doctrine/common` with following dependencies: 
+    - `doctrine/annotations`
+    - `symfony/dependency-injection`
+    - `symfony/yaml`
+    - `symfony/config`
+    - `symfony/http-kernel`
+    - `twig/twig`
+
+### Removed
+- \#45 Remove using `ClassUtils` for getting controller class
+
 ## [3.1.0]
 ### Fix
 - \#27 Fix route xml in documentation @migo315
