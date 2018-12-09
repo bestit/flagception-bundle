@@ -2,6 +2,9 @@
 ### Fix
 - \#47 Fix tree builder deprecation for symfony >= 4.2 @migo316
 
+### Added
+- \#49 Add support for Symfony 4.2 @migo315
+
 ## [3.1.1]
 ### Changed
 - \#45 Replace `symfony/framework-bundle` and `doctrine/common` with following dependencies: 
