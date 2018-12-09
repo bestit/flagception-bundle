@@ -4,6 +4,7 @@
 
 ### Added
 - \#49 Add support for Symfony 4.2 @migo315
+- \#48 Add support for PHP7.3 @migo315 
 
 ## [3.1.1]
 ### Changed
