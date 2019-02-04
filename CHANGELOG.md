@@ -1,4 +1,4 @@
-## Unreleased
+## [3.1.2]
 ### Fix
 - \#47 Fix tree builder deprecation for symfony >= 4.2 @migo316
 
