@@ -1,3 +1,7 @@
+## [3.2.0]
+### Added
+- \#53 Update flagception sdk to version 1.4 and implement whitelist / blacklist mode for cookies @migo315
+
 ## [3.1.2]
 ### Fix
 - \#47 Fix tree builder deprecation for symfony >= 4.2 @migo316

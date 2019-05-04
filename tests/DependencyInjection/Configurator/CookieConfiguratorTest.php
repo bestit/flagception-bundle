@@ -2,6 +2,7 @@
 
 namespace Flagception\Tests\FlagceptionBundle\DependencyInjection\Configurator;
 
+use Flagception\Activator\CookieActivator;
 use Flagception\Bundle\FlagceptionBundle\DependencyInjection\Configurator\CookieConfigurator;
 use Flagception\Bundle\FlagceptionBundle\DependencyInjection\FlagceptionExtension;
 use PHPUnit\Framework\TestCase;
@@ -206,13 +207,13 @@ class CookieConfiguratorTest extends TestCase
             [
                 'features' => [
                     'feature_foo' => [
-                        'cookie' => $cookie1 = true
+                        'cookie' => true
                     ],
                     'feature_bar' => [
                         'cookie' => false
                     ],
                     'feature_bazz' => [
-                        'cookie' => $cookie2 = 'true'
+                        'cookie' => 'true'
                     ],
                     'feature_foobazz' => []
                 ],
@@ -235,7 +236,58 @@ class CookieConfiguratorTest extends TestCase
                     'feature_foobazz'
                 ],
                 'flagception',
-                ','
+                ',',
+                CookieActivator::WHITELIST
+            ],
+            $this->container->getDefinition('flagception.activator.cookie_activator')->getArguments()
+        );
+    }
+
+    /**
+     * Test add features by blacklist
+     *
+     * @return void
+     */
+    public function testAddFeaturesByBlacklist()
+    {
+        $config = [
+            [
+                'features' => [
+                    'feature_foo' => [
+                        'cookie' => true
+                    ],
+                    'feature_bar' => [
+                        'cookie' => false
+                    ],
+                    'feature_bazz' => [
+                        'cookie' => 'true'
+                    ],
+                    'feature_foobazz' => [],
+                    'feature_wyz' => [
+                        'cookie' => 'false'
+                    ],
+                ],
+                'activators' => [
+                    'cookie' => [
+                        'enable' => true,
+                        'mode' => CookieActivator::BLACKLIST
+                    ]
+                ]
+            ]
+        ];
+
+        $extension = new FlagceptionExtension();
+        $extension->load($config, $this->container);
+
+        static::assertEquals(
+            [
+                [
+                    'feature_bar',
+                    'feature_wyz'
+                ],
+                'flagception',
+                ',',
+                CookieActivator::BLACKLIST
             ],
             $this->container->getDefinition('flagception.activator.cookie_activator')->getArguments()
         );
@@ -254,7 +306,8 @@ class CookieConfiguratorTest extends TestCase
                     'cookie' => [
                         'enable' => true,
                         'name' => $name = uniqid(),
-                        'separator' => $separator = uniqid()
+                        'separator' => $separator = uniqid(),
+                        'mode' => CookieActivator::BLACKLIST
                     ]
                 ]
             ]
@@ -267,7 +320,8 @@ class CookieConfiguratorTest extends TestCase
             [
                 [],
                 $name,
-                $separator
+                $separator,
+                CookieActivator::BLACKLIST
             ],
             $this->container->getDefinition('flagception.activator.cookie_activator')->getArguments()
         );

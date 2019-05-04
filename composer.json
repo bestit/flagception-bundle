@@ -18,7 +18,7 @@
     "symfony/http-kernel": "^2.7|^3.0|^4.0",
     "twig/twig": "^1.18|^2.0",
     "doctrine/annotations": "^1.0",
-    "flagception/flagception": "^1.3"
+    "flagception/flagception": "^1.4"
   },
   "require-dev": {
     "phing/phing": "^2.15",
