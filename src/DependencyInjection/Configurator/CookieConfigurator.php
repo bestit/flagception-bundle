@@ -32,14 +32,27 @@ class CookieConfigurator implements ActivatorConfiguratorInterface
             return;
         }
 
-        $cookieFeatures = array_keys(array_filter($features, function ($feature) {
-            return $feature['cookie'] === true;
-        }));
+        $cookieFeatures = [];
+
+        // Add only features which are allowed
+        if ($config['mode'] === CookieActivator::WHITELIST) {
+            $cookieFeatures = array_keys(array_filter($features, function ($feature) {
+                return $feature['cookie'] === true;
+            }));
+        }
+
+        // Add only features which are disallowed
+        if ($config['mode'] === CookieActivator::BLACKLIST) {
+            $cookieFeatures = array_keys(array_filter($features, function ($feature) {
+                return $feature['cookie'] === false;
+            }));
+        }
 
         $definition = new Definition(CookieActivator::class);
         $definition->addArgument($cookieFeatures);
         $definition->addArgument($config['name']);
         $definition->addArgument($config['separator']);
+        $definition->addArgument($config['mode']);
 
         $definition->addTag('flagception.activator', [
            'priority' => $config['priority']
@@ -74,6 +87,10 @@ class CookieConfigurator implements ActivatorConfiguratorInterface
                 ->scalarNode('separator')
                     ->defaultValue(',')
                     ->cannotBeEmpty()
+                ->end()
+                ->enumNode('mode')
+                    ->values([CookieActivator::WHITELIST, CookieActivator::BLACKLIST])
+                    ->defaultValue(CookieActivator::WHITELIST)
                 ->end()
             ->end();
     }
