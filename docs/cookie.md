@@ -29,7 +29,7 @@ Now you can set a cookie (eg. in chrome, firefox etc) and set the feature names 
 
 ![Image of Chrome cookies](images/cookie.png)
 
-No matter what is set in the config - if the feature name exists in the cookie, the feature is enabled for you. Notice that featurs
+No matter what is set in the config - if the feature name exists in the cookie, the feature is enabled for you. Notice that features
 can only be enabled by cookie if they exists in your config.yml. In addition, you can explicitly disable some features for cookies:
 
 ```yml
