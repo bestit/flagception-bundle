@@ -10,7 +10,7 @@ services:
 
     flagception.expression_language:
         class: Symfony\Component\ExpressionLanguage\ExpressionLanguage
-        factory: 'flagception.factory.expression_language_factory:create'
+        factory: ['@flagception.factory.expression_language_factory', 'create']
         public: false
 
     flagception.twig.toggle_extension:

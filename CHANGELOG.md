@@ -1,3 +1,7 @@
+## Unreleased
+### Fix
+- \#61 Replace deprecated service factory shortcut with array syntax @bretrzaun / @migo315
+
 ## [3.2.0]
 ### Added
 - \#53 Update flagception sdk to version 1.4 and implement whitelist / blacklist mode for cookies @migo315
