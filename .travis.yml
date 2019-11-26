@@ -27,6 +27,13 @@ matrix:
       env: SYMFONY_VERSION='4.1.*'
     - php: 7.2
       env: SYMFONY_VERSION='4.2.*'
+    - php: 7.3
+      env: SYMFONY_VERSION='4.3.*'
+    - php: 7.3
+      env: SYMFONY_VERSION='4.4.*'
+    # TODO: #64 Contentful SDK does not support symfony 5
+    #- php: 7.3
+    #  env: SYMFONY_VERSION='5.0.*'
 
 before_install:
   - composer self-update
@@ -36,10 +43,10 @@ cache:
   directories:
     - $HOME/.composer/cache
 
-install: composer update --prefer-dist --no-interaction $COMPOSER_FLAGS
+install: COMPOSER_MEMORY_LIMIT=-1 composer update --prefer-dist --no-interaction $COMPOSER_FLAGS
 
 script:
   - ./vendor/bin/phing build
 
 after_success:
-  - travis_retry php vendor/bin/coveralls
+  - travis_retry php vendor/bin/php-coveralls

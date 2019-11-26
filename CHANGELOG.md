@@ -1,4 +1,8 @@
-## Unreleased
+## [3.3.0]
+### Added
+- Add support for Symfony 5.0 @migo315
+- Extend Travis tests for Symfony 4.3 and 4.4 @migo315
+
 ### Fix
 - \#61 Replace deprecated service factory shortcut with array syntax @bretrzaun / @migo315
 
