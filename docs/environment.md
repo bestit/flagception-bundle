@@ -31,3 +31,15 @@ flagception:
             env: FEATURE_NAME_FROM_ENV  
             constraint: 'user_role == ROLE_ADMIN'
 ```
+
+As alternative, you can use the `%env()%` syntax for the default field:
+
+```yml
+# config.yml
+
+flagception:
+    features:      
+        feature_123:
+            default: '%env(FEATURE_NAME_FROM_ENV)%'
+```
+

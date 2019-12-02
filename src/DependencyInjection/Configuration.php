@@ -47,13 +47,7 @@ class Configuration implements ConfigurationInterface
                     ->useAttributeAsKey('name')
                     ->prototype('array')
                         ->children()
-                            ->booleanNode('default')
-                                ->beforeNormalization()
-                                    ->ifString()
-                                    ->then(function ($value) {
-                                        return filter_var($value, FILTER_VALIDATE_BOOLEAN);
-                                    })
-                                ->end()
+                            ->scalarNode('default')
                                 ->defaultFalse()
                             ->end()
                             ->scalarNode('env')
