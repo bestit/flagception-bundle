@@ -179,8 +179,9 @@ class ArrayConfiguratorTest extends TestCase
 
         static::assertEquals(
             [
-                'feature_foo',
-                'feature_bazz'
+                'feature_foo' => true,
+                'feature_bar' => false,
+                'feature_bazz' => 'true'
             ],
             $this->container->getDefinition('flagception.activator.array_activator')->getArgument(0)
         );

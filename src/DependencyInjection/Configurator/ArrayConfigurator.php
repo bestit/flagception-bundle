@@ -32,12 +32,10 @@ class ArrayConfigurator implements ActivatorConfiguratorInterface
             return;
         }
 
-        $defaultFeatures = array_keys(array_filter($features, function ($feature) {
-            return $feature['default'] === true;
-        }));
-
         $definition = new Definition(ArrayActivator::class);
-        $definition->addArgument($defaultFeatures);
+        $definition->addArgument(
+            array_combine(array_keys($features), array_column($features, 'default'))
+        );
 
         $definition->addTag('flagception.activator', [
            'priority' => $config['priority']

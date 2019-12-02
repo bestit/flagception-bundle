@@ -1,3 +1,11 @@
+## [3.4.0]
+### Changed
+- Update to Flagception SDK Version ^1.5 @migo315
+- Allow `%env()` syntax for `default` field in feature list @c33s \ @migo315
+
+### Fix
+- Fix env handling for `DotEnv` component >=5.0 @c33s \ @migo315
+
 ## [3.3.0]
 ### Added
 - Add support for Symfony 5.0 @migo315
