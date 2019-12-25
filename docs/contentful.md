@@ -121,3 +121,38 @@ flagception:
                 name: 'featureName'
                 state: 'isActive'
 ```
+
+Enable caching
+-------------------------
+This activator will request Contentful for every check. This is not advantageous due to the 
+long HTTP communication. Therefore, you can set up a cache for this activator. Identical feature queries are 
+then loaded from the cache instead of being retrieved from Contentful. All you have to do is specify a cache 
+pool and cache interval.
+                         
+By default, the cache is disabled to avoid a BC.
+
+Example:
+
+```yml
+# config.yml
+
+flagception:
+    features:      
+        feature_123:
+            default: false
+   
+    activators:     
+        contentful:
+            enable: true
+            # ...
+            cache:
+            
+                # Enable the cache option (default: false)
+                enable: true
+                
+                # Set cache pool (default: cache.app)
+                pool: cache.app
+                
+                # Set lifetime for cache in seconds (default: 3600)
+                lifetime: 3600
+```

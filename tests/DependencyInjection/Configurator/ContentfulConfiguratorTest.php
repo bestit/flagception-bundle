@@ -4,6 +4,8 @@ namespace Flagception\Tests\FlagceptionBundle\DependencyInjection\Configurator;
 
 use Flagception\Bundle\FlagceptionBundle\DependencyInjection\Configurator\ContentfulConfigurator;
 use Flagception\Bundle\FlagceptionBundle\DependencyInjection\FlagceptionExtension;
+use LogicException;
+use phpmock\phpunit\PHPMock;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
@@ -18,6 +20,8 @@ use Symfony\Component\DependencyInjection\Reference;
  */
 class ContentfulConfiguratorTest extends TestCase
 {
+    use PHPMock;
+
     /**
      * The container
      *
@@ -59,6 +63,40 @@ class ContentfulConfiguratorTest extends TestCase
         $extension->load($config, $this->container);
 
         static::assertFalse($this->container->hasDefinition('flagception.activator.contentful_activator'));
+    }
+
+    /**
+     * Test activator raise exception if missing library
+     *
+     * @return void
+     */
+    public function testActivatorNeedsLibrary()
+    {
+        $this->expectException(LogicException::class);
+
+        $config = [
+            [
+                'activators' => [
+                    'contentful' => [
+                        'enable' => true,
+                        'client_id' => 'foobar'
+                    ]
+                ]
+            ]
+        ];
+
+        $classExists = $this->getFunctionMock(
+            'Flagception\Bundle\FlagceptionBundle\DependencyInjection\Configurator',
+            'class_exists'
+        );
+
+        $classExists
+            ->expects(static::once())
+            ->with('Flagception\Contentful\Activator\ContentfulActivator')
+            ->willReturn(false);
+
+        $extension = new FlagceptionExtension();
+        $extension->load($config, $this->container);
     }
 
     /**
@@ -203,6 +241,55 @@ class ContentfulConfiguratorTest extends TestCase
     }
 
     /**
+     * Test activator cache can be enabled by string
+     *
+     * @return void
+     */
+    public function testCacheCanByEnabledByString()
+    {
+        $config = [
+            [
+                'activators' => [
+                    'contentful' => [
+                        'enable' => 'true',
+                        'client_id' => 'foobar',
+                        'cache' => [
+                            'enable' => 'true'
+                        ]
+                    ]
+                ]
+            ]
+        ];
+        $extension = new FlagceptionExtension();
+        $extension->load($config, $this->container);
+
+        static::assertTrue($this->container->hasDefinition('flagception.activator.contentful_activator.cache'));
+    }
+
+    /**
+     * Test cache activator is disabled by default
+     *
+     * @return void
+     */
+    public function testCacheIsDisabledByDefault()
+    {
+        $config = [
+            [
+                'activators' => [
+                    'contentful' => [
+                        'enable' => 'true',
+                        'client_id' => 'foobar'
+                    ]
+                ]
+            ]
+        ];
+        $extension = new FlagceptionExtension();
+        $extension->load($config, $this->container);
+
+        static::assertFalse($this->container->hasDefinition('flagception.activator.contentful_activator.cache'));
+    }
+
+    /**
      * Test minimal configuration
      *
      * @return void
@@ -240,6 +327,8 @@ class ContentfulConfiguratorTest extends TestCase
             ],
             $this->container->getDefinition('flagception.activator.contentful_activator')->getArgument(2)
         );
+
+        static::assertFalse($this->container->hasDefinition('flagception.activator.contentful_activator.cache'));
     }
 
     /**
@@ -259,6 +348,11 @@ class ContentfulConfiguratorTest extends TestCase
                         'mapping' => [
                             'name' => $name = uniqid(),
                             'state' => $state = uniqid()
+                        ],
+                        'cache' => [
+                            'enable' => true,
+                            'pool' => 'cache.app',
+                            'lifetime' => 3600
                         ]
                     ]
                 ]
@@ -284,6 +378,12 @@ class ContentfulConfiguratorTest extends TestCase
                 'state' => $state
             ],
             $this->container->getDefinition('flagception.activator.contentful_activator')->getArgument(2)
+        );
+
+        $definition = $this->container->getDefinition('flagception.activator.contentful_activator.cache');
+        static::assertEquals(
+            'flagception.activator.contentful_activator',
+            $definition->getDecoratedService()[0]
         );
     }
 }

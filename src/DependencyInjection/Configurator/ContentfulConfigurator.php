@@ -2,6 +2,7 @@
 
 namespace Flagception\Bundle\FlagceptionBundle\DependencyInjection\Configurator;
 
+use Flagception\Activator\CacheActivator;
 use Flagception\Contentful\Activator\ContentfulActivator;
 use LogicException;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
@@ -10,7 +11,7 @@ use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
- * Class ContentfulConfigurator
+ * Configurator for contentful activator
  *
  * @author Michel Chowanski <chowanski@bestit-online.de>
  * @package Flagception\Bundle\FlagceptionBundle\DependencyInjection\Configurator
@@ -48,6 +49,17 @@ class ContentfulConfigurator implements ActivatorConfiguratorInterface
         ]);
 
         $container->setDefinition('flagception.activator.contentful_activator', $definition);
+
+        // Set caching
+        if ($config['cache']['enable'] === true) {
+            $cacheDefinition = new Definition(CacheActivator::class);
+            $cacheDefinition->setDecoratedService('flagception.activator.contentful_activator');
+            $cacheDefinition->addArgument(new Reference('flagception.activator.contentful_activator.cache.inner'));
+            $cacheDefinition->addArgument(new Reference($config['cache']['pool']));
+            $cacheDefinition->addArgument($config['cache']['lifetime']);
+
+            $container->setDefinition('flagception.activator.contentful_activator.cache', $cacheDefinition);
+        }
     }
 
     /**
@@ -88,6 +100,27 @@ class ContentfulConfigurator implements ActivatorConfiguratorInterface
                         ->scalarNode('state')
                             ->defaultValue('state')
                             ->cannotBeEmpty()
+                        ->end()
+                    ->end()
+                ->end()
+                ->arrayNode('cache')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->booleanNode('enable')
+                            ->beforeNormalization()
+                                ->ifString()
+                                ->then(function ($value) {
+                                    return filter_var($value, FILTER_VALIDATE_BOOLEAN);
+                                })
+                            ->end()
+                            ->defaultFalse()
+                        ->end()
+                        ->scalarNode('pool')
+                            ->defaultValue('cache.app')
+                            ->cannotBeEmpty()
+                        ->end()
+                        ->integerNode('lifetime')
+                            ->defaultValue(3600)
                         ->end()
                     ->end()
                 ->end()

@@ -5,8 +5,8 @@ namespace Flagception\Bundle\FlagceptionBundle\Listener;
 use Flagception\Bundle\FlagceptionBundle\Annotations\Feature;
 use Flagception\Manager\FeatureManagerInterface;
 use Doctrine\Common\Annotations\Reader;
-use Doctrine\Common\Util\ClassUtils;
 use ReflectionClass;
+use ReflectionException;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -52,7 +52,9 @@ class AnnotationSubscriber implements EventSubscriberInterface
      * @param FilterControllerEvent $event
      *
      * @return void
+     *
      * @throws NotFoundHttpException
+     * @throws ReflectionException
      */
     public function onKernelController(FilterControllerEvent $event)
     {
@@ -67,9 +69,7 @@ class AnnotationSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $class = ClassUtils::getClass($controller[0]);
-        $object = new ReflectionClass($class);
-
+        $object = new ReflectionClass($controller[0]);
         foreach ($this->reader->getClassAnnotations($object) as $annotation) {
             if ($annotation instanceof Feature) {
                 if (!$this->manager->isActive($annotation->name)) {

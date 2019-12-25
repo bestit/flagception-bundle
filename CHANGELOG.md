@@ -1,3 +1,69 @@
+## [3.4.0]
+### Changed
+- Update to Flagception SDK Version ^1.5 @migo315
+- Allow `%env()` syntax for `default` field in feature list @c33s \ @migo315
+
+### Fix
+- Fix env handling for `DotEnv` component >=5.0 @c33s \ @migo315
+
+## [3.3.0]
+### Added
+- Add support for Symfony 5.0 @migo315
+- Extend Travis tests for Symfony 4.3 and 4.4 @migo315
+
+### Fix
+- \#61 Replace deprecated service factory shortcut with array syntax @bretrzaun / @migo315
+
+## [3.2.0]
+### Added
+- \#53 Update flagception sdk to version 1.4 and implement whitelist / blacklist mode for cookies @migo315
+
+## [3.1.2]
+### Fix
+- \#47 Fix tree builder deprecation for symfony >= 4.2 @migo316
+
+### Added
+- \#49 Add support for Symfony 4.2 @migo315
+- \#48 Add support for PHP7.3 @migo315 
+
+## [3.1.1]
+### Changed
+- \#45 Replace `symfony/framework-bundle` and `doctrine/common` with following dependencies: 
+    - `doctrine/annotations`
+    - `symfony/dependency-injection`
+    - `symfony/yaml`
+    - `symfony/config`
+    - `symfony/http-kernel`
+    - `twig/twig`
+
+### Removed
+- \#45 Remove using `ClassUtils` for getting controller class
+
+## [3.1.0]
+### Fix
+- \#27 Fix route xml in documentation @migo315
+
+### Changed
+- \#35 Swap own cookie activator with the new flagception sdk cookie activator @migo315
+- Refactor profiler and data collector  @migo315
+- Swap old `ProfilerChainActivator` with new `TraceableChainActivator` @migo315
+- Update [Flagception SDK](https://packagist.org/packages/flagception/flagception) to version 1.3.0 @migo315
+
+### Added
+- \#26 Add feature name advice in documentation @migo315
+- Add `php-mock` as dev dependency and add missing contentful configurator test @migo315
+- \#31 Add support for auto configuration for `FeatureActivatorInterface` @migo315
+- \#32 Add support for auto configuration for `ContectDecoratorInterface` @migo315
+- Add caching option for `ContentfulActivator` @migo315
+- Add configuration for the new [DatabaseActivator](https://packagist.org/packages/flagception/database-activator) @migo315
+
+### Removed
+- Remove unneeded models and bags (just internal stuff) @migo315
+
+## [3.0.1]
+### Fix
+- Add service alias for `Flagception\Manager\FeatureManagerInterface` for fixing autowiring @hanishsingla
+
 ## [3.0.0]
 ### Refactored
 - Complete refactoring and renaming to `flagception` @migo315

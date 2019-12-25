@@ -12,18 +12,24 @@
   ],
   "require": {
     "php": "^5.6||^7.0",
-    "symfony/framework-bundle": ">=2.7",
-    "doctrine/common": "^2.3",
-    "flagception/flagception": "^1.1"
+    "symfony/dependency-injection": "^2.7|^3.0|^4.0|^5.0",
+    "symfony/yaml": "^2.7|^3.0|^4.0|^5.0",
+    "symfony/config": "^2.7|^3.0|^4.0|^5.0",
+    "symfony/http-kernel": "^2.7|^3.0|^4.0|^5.0",
+    "twig/twig": "^1.18|^2.0",
+    "doctrine/annotations": "^1.0",
+    "flagception/flagception": "^1.5"
   },
   "require-dev": {
     "phing/phing": "^2.15",
     "symfony/phpunit-bridge": ">=2.7",
     "symfony/twig-bridge": ">=2.7",
     "flagception/contentful-activator": "^1.0",
+    "flagception/database-activator": "^1.0",
     "phpunit/phpunit": "^5.5",
+    "php-mock/php-mock-phpunit": "^1.1",
     "squizlabs/php_codesniffer": "^2.8",
-    "php-coveralls/php-coveralls": "^1.0"
+    "php-coveralls/php-coveralls": "^2.0"
   },
   "autoload": {
     "psr-4": {
@@ -42,6 +48,7 @@
     }
   },
   "suggest": {
-    "flagception/contentful-activator": "Fetch feature flags from contentful."
+    "flagception/contentful-activator": "Fetch feature flags from contentful.",
+    "flagception/database-activator": "Fetch feature flags from a database."
   }
 }

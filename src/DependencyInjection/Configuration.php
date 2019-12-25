@@ -3,6 +3,7 @@
 namespace Flagception\Bundle\FlagceptionBundle\DependencyInjection;
 
 use Flagception\Bundle\FlagceptionBundle\DependencyInjection\Configurator\ActivatorConfiguratorInterface;
+use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\NodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
@@ -37,8 +38,8 @@ class Configuration implements ConfigurationInterface
      */
     public function getConfigTreeBuilder()
     {
-        $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('flagception');
+        $treeBuilder = new TreeBuilder('flagception');
+        $rootNode = $this->getRootNode($treeBuilder, 'flagception');
 
         $rootNode
             ->children()
@@ -46,13 +47,7 @@ class Configuration implements ConfigurationInterface
                     ->useAttributeAsKey('name')
                     ->prototype('array')
                         ->children()
-                            ->booleanNode('default')
-                                ->beforeNormalization()
-                                    ->ifString()
-                                    ->then(function ($value) {
-                                        return filter_var($value, FILTER_VALIDATE_BOOLEAN);
-                                    })
-                                ->end()
+                            ->scalarNode('default')
                                 ->defaultFalse()
                             ->end()
                             ->scalarNode('env')
@@ -72,6 +67,7 @@ class Configuration implements ConfigurationInterface
                             ->end()
                         ->end()
                     ->end()
+                    ->defaultValue([])
                 ->end()
                 ->arrayNode('annotation')
                     ->addDefaultsIfNotSet()
@@ -114,8 +110,8 @@ class Configuration implements ConfigurationInterface
      */
     public function appendActivators()
     {
-        $builder = new TreeBuilder();
-        $node = $builder->root('activators');
+        $builder = new TreeBuilder('activators');
+        $node = $this->getRootNode($builder, 'activators');
         $node->addDefaultsIfNotSet();
 
         $activatorNodeBuilder = $node->children();
@@ -126,5 +122,22 @@ class Configuration implements ConfigurationInterface
         }
 
         return $node;
+    }
+
+    /**
+     * BC layer for symfony/config 4.1 and older
+     *
+     * @param TreeBuilder $treeBuilder
+     * @param $name
+     *
+     * @return ArrayNodeDefinition|NodeDefinition
+     */
+    private function getRootNode(TreeBuilder $treeBuilder, $name)
+    {
+        if (!\method_exists($treeBuilder, 'getRootNode')) {
+            return $treeBuilder->root($name);
+        }
+
+        return $treeBuilder->getRootNode();
     }
 }

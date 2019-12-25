@@ -2,7 +2,9 @@
 
 namespace Flagception\Tests\FlagceptionBundle\DependencyInjection;
 
+use Flagception\Activator\FeatureActivatorInterface;
 use Flagception\Bundle\FlagceptionBundle\DependencyInjection\FlagceptionExtension;
+use Flagception\Decorator\ContextDecoratorInterface;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
@@ -42,18 +44,7 @@ class FlagceptionExtensionTest extends TestCase
      */
     public function testAnnotationSubscriberDisabled()
     {
-        $config = [
-            [
-                'features' => [
-                    'feature_foo' => [
-                        'default' => true
-                    ],
-                    'feature_bar' => [
-                        'default' => false
-                    ]
-                ]
-            ]
-        ];
+        $config = [];
 
         $extension = new FlagceptionExtension();
         $extension->load($config, $this->container);
@@ -72,14 +63,6 @@ class FlagceptionExtensionTest extends TestCase
             [
                 'annotation' => [
                     'enable' => true
-                ],
-                'features' => [
-                    'feature_foo' => [
-                        'default' => true
-                    ],
-                    'feature_bar' => [
-                        'default' => false
-                    ]
                 ]
             ]
         ];
@@ -102,14 +85,6 @@ class FlagceptionExtensionTest extends TestCase
             [
                 'annotation' => [
                     'enable' => 'true'
-                ],
-                'features' => [
-                    'feature_foo' => [
-                        'default' => true
-                    ],
-                    'feature_bar' => [
-                        'default' => false
-                    ]
                 ]
             ]
         ];
@@ -132,14 +107,6 @@ class FlagceptionExtensionTest extends TestCase
             [
                 'routing_metadata' => [
                     'enable' => false
-                ],
-                'features' => [
-                    'feature_foo' => [
-                        'default' => true
-                    ],
-                    'feature_bar' => [
-                        'default' => false
-                    ]
                 ]
             ]
         ];
@@ -157,18 +124,7 @@ class FlagceptionExtensionTest extends TestCase
      */
     public function testRoutingMetadataSubscriberEnabled()
     {
-        $config = [
-            [
-                'features' => [
-                    'feature_foo' => [
-                        'default' => true
-                    ],
-                    'feature_bar' => [
-                        'default' => false
-                    ]
-                ]
-            ]
-        ];
+        $config = [];
 
         $extension = new FlagceptionExtension();
         $extension->load($config, $this->container);
@@ -188,14 +144,6 @@ class FlagceptionExtensionTest extends TestCase
             [
                 'routing_metadata' => [
                     'enable' => 'true'
-                ],
-                'features' => [
-                    'feature_foo' => [
-                        'default' => true
-                    ],
-                    'feature_bar' => [
-                        'default' => false
-                    ]
                 ]
             ]
         ];
@@ -205,5 +153,32 @@ class FlagceptionExtensionTest extends TestCase
 
         $definition = $this->container->getDefinition('flagception.listener.routing_metadata_subscriber');
         static::assertTrue($definition->hasTag('kernel.event_subscriber'));
+    }
+
+    /**
+     * Test that annotation subscriber is disabled
+     *
+     * @return void
+     */
+    public function testAutConfiguration()
+    {
+        if (method_exists($this->container, 'registerForAutoconfiguration') === false) {
+            $this->markTestSkipped('Only since Symfony 3.3');
+        }
+
+        $config = [];
+
+        $extension = new FlagceptionExtension();
+        $extension->load($config, $this->container);
+
+        $activatorChildDefinition = $this->container->getAutoconfiguredInstanceof()[FeatureActivatorInterface::class];
+        static::assertEquals([
+            'flagception.activator' => [[]]
+        ], $activatorChildDefinition->getTags());
+
+        $contextChildDefinition = $this->container->getAutoconfiguredInstanceof()[ContextDecoratorInterface::class];
+        static::assertEquals([
+            'flagception.context_decorator' => [[]]
+        ], $contextChildDefinition->getTags());
     }
 }
