@@ -3,11 +3,11 @@
 namespace Flagception\Bundle\FlagceptionBundle\Profiler;
 
 use Flagception\Bundle\FlagceptionBundle\Activator\TraceableChainActivator;
-use Exception;
 use Flagception\Decorator\ChainDecorator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;
+use Throwable;
 
 /**
  * Class FeatureDataCollector
@@ -46,7 +46,7 @@ class FeatureDataCollector extends DataCollector
     /**
      * {@inheritdoc}
      */
-    public function collect(Request $request, Response $response, Exception $exception = null)
+    public function collect(Request $request, Response $response, Throwable $exception = null)
     {
         $this->data = [
             'summary' => [
