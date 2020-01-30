@@ -4,9 +4,9 @@ namespace Flagception\Bundle\FlagceptionBundle\Twig;
 
 use Flagception\Manager\FeatureManagerInterface;
 use Flagception\Model\Context;
-use Twig_Extension;
-use Twig_SimpleFunction;
-use Twig_SimpleTest;
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFunction;
+use Twig\TwigTest;
 
 /**
  * Class ToggleExtension
@@ -14,7 +14,7 @@ use Twig_SimpleTest;
  * @author Michel Chowanski <michel.chowanski@bestit-online.de>
  * @package Flagception\Bundle\FlagceptionBundle\Twig
  */
-class ToggleExtension extends Twig_Extension
+class ToggleExtension extends AbstractExtension
 {
     /**
      * The manager
@@ -57,7 +57,7 @@ class ToggleExtension extends Twig_Extension
     public function getFunctions()
     {
         return [
-            new Twig_SimpleFunction('feature', [$this, 'isActive']),
+            new TwigFunction('feature', [$this, 'isActive']),
         ];
     }
 
@@ -67,7 +67,7 @@ class ToggleExtension extends Twig_Extension
     public function getTests()
     {
         return [
-            new Twig_SimpleTest('active feature', [$this, 'isActive']),
+            new TwigTest('active feature', [$this, 'isActive']),
         ];
     }
 
