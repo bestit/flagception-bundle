@@ -14,11 +14,6 @@ services:
         tags:
             - { name: flagception.configurator }
 
-    flagception.configurator.contentful_configurator:
-        class: Flagception\Bundle\FlagceptionBundle\DependencyInjection\Configurator\ContentfulConfigurator
-        tags:
-            - { name: flagception.configurator }
-
     flagception.configurator.cookie_configurator:
         class: Flagception\Bundle\FlagceptionBundle\DependencyInjection\Configurator\CookieConfigurator
         tags:

@@ -4,7 +4,7 @@ namespace Flagception\Bundle\FlagceptionBundle\Listener;
 
 use Flagception\Manager\FeatureManagerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
+use Symfony\Component\HttpKernel\Event\ControllerEvent;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\KernelEvents;
 
@@ -43,12 +43,12 @@ class RoutingMetadataSubscriber implements EventSubscriberInterface
     /**
      * Filter by routing metadata
      *
-     * @param FilterControllerEvent $event
+     * @param ControllerEvent $event
      *
      * @return void
      * @throws NotFoundHttpException
      */
-    public function onKernelController(FilterControllerEvent $event)
+    public function onKernelController(ControllerEvent $event)
     {
         if (!$event->getRequest()->attributes->has(static::FEATURE_KEY)) {
             return;

@@ -39,7 +39,7 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder('flagception');
-        $rootNode = $this->getRootNode($treeBuilder, 'flagception');
+        $rootNode = $treeBuilder->getRootNode();
 
         $rootNode
             ->children()
@@ -111,7 +111,7 @@ class Configuration implements ConfigurationInterface
     public function appendActivators()
     {
         $builder = new TreeBuilder('activators');
-        $node = $this->getRootNode($builder, 'activators');
+        $node = $builder->getRootNode();
         $node->addDefaultsIfNotSet();
 
         $activatorNodeBuilder = $node->children();
@@ -122,22 +122,5 @@ class Configuration implements ConfigurationInterface
         }
 
         return $node;
-    }
-
-    /**
-     * BC layer for symfony/config 4.1 and older
-     *
-     * @param TreeBuilder $treeBuilder
-     * @param $name
-     *
-     * @return ArrayNodeDefinition|NodeDefinition
-     */
-    private function getRootNode(TreeBuilder $treeBuilder, $name)
-    {
-        if (!\method_exists($treeBuilder, 'getRootNode')) {
-            return $treeBuilder->root($name);
-        }
-
-        return $treeBuilder->getRootNode();
     }
 }

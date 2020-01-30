@@ -1,3 +1,15 @@
+## [4.0.0]
+### Changed
+- \#67 Add compatibility for Symfony 5 @migo315
+- \#67 Drop compatibility for Symfony 2, Symfony 3 and Symfony 4 @migo315 @hanishsingla
+- Drop Contentful Activator @migo315
+- \#64 Add Travis tests for Symony 5 @migo315
+- \#59 Update PHP requirements @migo315
+
+## [3.5.0]
+### Changed
+- \#69 Support for twig 3 @migo315
+
 ## [3.4.0]
 ### Changed
 - Update to Flagception SDK Version ^1.5 @migo315

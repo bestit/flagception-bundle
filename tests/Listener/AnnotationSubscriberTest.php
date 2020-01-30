@@ -8,8 +8,10 @@ use Flagception\Manager\FeatureManagerInterface;
 use Flagception\Tests\FlagceptionBundle\Fixtures\Helper\AnnotationTestClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Event\ControllerEvent;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
@@ -56,8 +58,7 @@ class AnnotationSubscriberTest extends TestCase
         $manager = $this->createMock(FeatureManagerInterface::class);
         $manager->expects(static::never())->method('isActive');
 
-        $event = $this->createMock(FilterControllerEvent::class);
-        $event->method('getController')->willReturn(
+        $event = $this->createControllerEvent(
             function () {
             }
         );
@@ -76,8 +77,7 @@ class AnnotationSubscriberTest extends TestCase
         $manager = $this->createMock(FeatureManagerInterface::class);
         $manager->method('isActive')->with('feature_abc')->willReturn(true);
 
-        $event = $this->createMock(FilterControllerEvent::class);
-        $event->method('getController')->willReturn([
+        $event = $this->createControllerEvent([
             new AnnotationTestClass(),
             'normalMethod'
         ]);
@@ -98,8 +98,7 @@ class AnnotationSubscriberTest extends TestCase
         $manager = $this->createMock(FeatureManagerInterface::class);
         $manager->method('isActive')->with('feature_abc')->willReturn(false);
 
-        $event = $this->createMock(FilterControllerEvent::class);
-        $event->method('getController')->willReturn([
+        $event = $this->createControllerEvent([
             new AnnotationTestClass(),
             'normalMethod'
         ]);
@@ -121,8 +120,7 @@ class AnnotationSubscriberTest extends TestCase
             ->withConsecutive(['feature_abc'], ['feature_def'])
             ->willReturnOnConsecutiveCalls(true, true);
 
-        $event = $this->createMock(FilterControllerEvent::class);
-        $event->method('getController')->willReturn([
+        $event = $this->createControllerEvent([
             new AnnotationTestClass(),
             'invalidMethod'
         ]);
@@ -146,13 +144,29 @@ class AnnotationSubscriberTest extends TestCase
             ->withConsecutive(['feature_abc'], ['feature_def'])
             ->willReturnOnConsecutiveCalls(true, false);
 
-        $event = $this->createMock(FilterControllerEvent::class);
-        $event->method('getController')->willReturn([
+        $event = $this->createControllerEvent([
             new AnnotationTestClass(),
             'invalidMethod'
         ]);
 
         $subscriber = new AnnotationSubscriber(new AnnotationReader(), $manager);
         $subscriber->onKernelController($event);
+    }
+
+    /**
+     * Create ControllerEvent
+     *
+     * @param $controller
+     *
+     * @return ControllerEvent
+     */
+    private function createControllerEvent($controller): ControllerEvent
+    {
+        return new ControllerEvent(
+            $this->createMock(HttpKernelInterface::class),
+            $controller,
+            new Request(),
+            HttpKernelInterface::MASTER_REQUEST
+        );
     }
 }

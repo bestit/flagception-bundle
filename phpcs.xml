@@ -4,4 +4,6 @@
     <rule ref="Generic.Commenting.DocComment">
         <exclude name="Generic.Commenting.DocComment.TagValueIndent"/>
     </rule>
+    <file>src/</file>
+    <file>tests/</file>
 </ruleset>

@@ -7,8 +7,9 @@ use Flagception\Manager\FeatureManagerInterface;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
+use Symfony\Component\HttpKernel\Event\ControllerEvent;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
@@ -51,11 +52,7 @@ class RoutingMetadataSubscriberTest extends TestCase
     public function testRequestHasNoFeature()
     {
         $request = new Request();
-
-        $event = $this->createMock(FilterControllerEvent::class);
-        $event
-            ->method('getRequest')
-            ->willReturn($request);
+        $event = $this->createControllerEvent($request);
 
         $manager = $this->createMock(FeatureManagerInterface::class);
         $manager
@@ -76,11 +73,7 @@ class RoutingMetadataSubscriberTest extends TestCase
         $this->expectException(NotFoundHttpException::class);
 
         $request = new Request([], [], ['_feature' => 'feature_abc']);
-
-        $event = $this->createMock(FilterControllerEvent::class);
-        $event
-            ->method('getRequest')
-            ->willReturn($request);
+        $event = $this->createControllerEvent($request);
 
         $manager = $this->createMock(FeatureManagerInterface::class);
         $manager
@@ -101,11 +94,7 @@ class RoutingMetadataSubscriberTest extends TestCase
     public function testFeatureIsActive()
     {
         $request = new Request([], [], ['_feature' => 'feature_abc']);
-
-        $event = $this->createMock(FilterControllerEvent::class);
-        $event
-            ->method('getRequest')
-            ->willReturn($request);
+        $event = $this->createControllerEvent($request);
 
         $manager = $this->createMock(FeatureManagerInterface::class);
         $manager
@@ -116,5 +105,22 @@ class RoutingMetadataSubscriberTest extends TestCase
 
         $subscriber = new RoutingMetadataSubscriber($manager);
         $subscriber->onKernelController($event);
+    }
+
+    /**
+     * Create ControllerEvent
+     *
+     * @param $controller
+     *
+     * @return ControllerEvent
+     */
+    private function createControllerEvent($request): ControllerEvent
+    {
+        return new ControllerEvent(
+            $this->createMock(HttpKernelInterface::class),
+            [$this, 'testFeatureIsActive'],
+            $request,
+            HttpKernelInterface::MASTER_REQUEST
+        );
     }
 }

@@ -1,6 +1,6 @@
 # Flagception
 **Feature toggle bundle on steroids!** Flagception is a simple and powerful feature toggle system for php.
-This bundle integrates the [Flagception PHP Libary](https://packagist.org/packages/flagception/flagception) for symfony 2.7 to 4.2 (and php 5.6 to php7.3).
+This bundle integrates the [Flagception PHP Libary](https://packagist.org/packages/flagception/flagception) for symfony 2.7 to 5.* (and php 5.6 to php7.*).
 
 [![Latest Stable Version](https://poser.pugx.org/flagception/flagception-bundle/v/stable)](https://packagist.org/packages/flagception/flagception-bundle)
 [![Coverage Status](https://coveralls.io/repos/github/bestit/flagception-bundle/badge.svg?branch=master)](https://coveralls.io/github/bestit/flagception-bundle?branch=master)
@@ -10,6 +10,11 @@ This bundle integrates the [Flagception PHP Libary](https://packagist.org/packag
 
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/4423478b-f6db-4f77-bb36-0782bcdf82c0/small.png)](https://insight.sensiolabs.com/projects/4423478b-f6db-4f77-bb36-0782bcdf82c0)
 
+| Bundle Version (Tag) | Support Symfony | Branch |
+|----------------------|-----------------|--------|
+| <=3                  | 2.7 - 4.4       | 3.x    |
+| >=4                  | 5.0 - current   | master |
+
 ```console
 $ composer require flagception/flagception-bundle
 ```
@@ -18,6 +23,7 @@ Documentation
 ---------------------------
 * [Installation](docs/install.md)
 * [Upgrade from 2.x](UPGRADE-3.0.md)
+* [Upgrade from 3.x](UPGRADE-4.0.md)
 * [Usage](docs/usage.md)
 * [Twig flags](docs/twig.md)
 * [Route flags](docs/route.md)
@@ -27,7 +33,6 @@ Documentation
 * [Cookies](docs/cookie.md)
 * [Database](docs/database.md)
 * [Activators](docs/activator.md)
-* [Contenftul](docs/contentful.md)
 * [Profiler](docs/profiler.md)
 
 Quick example
