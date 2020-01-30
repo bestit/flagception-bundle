@@ -14,15 +14,27 @@ use Flagception\Bundle\FlagceptionBundle\Annotations\Feature;
  */
 class AnnotationTestClass
 {
+    /**
+     * Normal test method
+     *
+     * @return void
+     */
     public function normalMethod()
     {
     }
 
+    /**
+     * Valid test method
+     *
+     * @return void
+     */
     public function validMethod()
     {
     }
 
     /**
+     * Method with feature flag
+     *
      * @Feature("feature_def")
      */
     public function invalidMethod()

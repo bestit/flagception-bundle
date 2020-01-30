@@ -32,7 +32,7 @@ class DatabaseConfiguratorTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $container = new ContainerBuilder();
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../../../src/Resources/config'));
@@ -389,39 +389,5 @@ class DatabaseConfiguratorTest extends TestCase
         $extension->load($config, $this->container);
 
         static::assertTrue($this->container->hasDefinition('flagception.activator.database_activator.cache'));
-    }
-
-    /**
-     * Test activator raise exception if missing library
-     *
-     * @return void
-     */
-    public function testActivatorNeedsLibrary()
-    {
-        $this->expectException(LogicException::class);
-
-        $config = [
-            [
-                'activators' => [
-                    'database' => [
-                        'enable' => true,
-                        'url' => 'foobar'
-                    ]
-                ]
-            ]
-        ];
-
-        $classExists = $this->getFunctionMock(
-            'Flagception\Bundle\FlagceptionBundle\DependencyInjection\Configurator',
-            'class_exists'
-        );
-
-        $classExists
-            ->expects(static::once())
-            ->with('Flagception\Database\Activator\DatabaseActivator')
-            ->willReturn(false);
-
-        $extension = new FlagceptionExtension();
-        $extension->load($config, $this->container);
     }
 }

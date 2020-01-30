@@ -24,7 +24,7 @@ cache:
 install: COMPOSER_MEMORY_LIMIT=-1 composer update --prefer-dist --no-interaction $COMPOSER_FLAGS
 
 script:
-  - ./vendor/bin/phing build
+  - composer tests
 
 after_success:
   - travis_retry php vendor/bin/php-coveralls

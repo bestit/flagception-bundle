@@ -8,7 +8,7 @@ use Doctrine\Common\Annotations\Reader;
 use ReflectionClass;
 use ReflectionException;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
+use Symfony\Component\HttpKernel\Event\ControllerEvent;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\KernelEvents;
 
@@ -49,14 +49,14 @@ class AnnotationSubscriber implements EventSubscriberInterface
     /**
      * Filter on controller / method
      *
-     * @param FilterControllerEvent $event
+     * @param ControllerEvent $event
      *
      * @return void
      *
      * @throws NotFoundHttpException
      * @throws ReflectionException
      */
-    public function onKernelController(FilterControllerEvent $event)
+    public function onKernelController(ControllerEvent $event)
     {
         $controller = $event->getController();
 

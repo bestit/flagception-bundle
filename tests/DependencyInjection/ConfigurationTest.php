@@ -4,9 +4,7 @@ namespace Flagception\Tests\FlagceptionBundle\DependencyInjection;
 
 use Flagception\Bundle\FlagceptionBundle\DependencyInjection\Configuration;
 use Flagception\Bundle\FlagceptionBundle\DependencyInjection\Configurator\ArrayConfigurator;
-use Flagception\Bundle\FlagceptionBundle\DependencyInjection\Configurator\ConfigConfigurator;
 use Flagception\Bundle\FlagceptionBundle\DependencyInjection\Configurator\ConstraintConfigurator;
-use Flagception\Bundle\FlagceptionBundle\DependencyInjection\Configurator\ContentfulConfigurator;
 use Flagception\Bundle\FlagceptionBundle\DependencyInjection\Configurator\CookieConfigurator;
 use Flagception\Bundle\FlagceptionBundle\DependencyInjection\Configurator\EnvironmentConfigurator;
 use PHPUnit\Framework\TestCase;
@@ -30,7 +28,6 @@ class ConfigurationTest extends TestCase
         static::assertInstanceOf(TreeBuilder::class, (new Configuration([
             new ArrayConfigurator(),
             new ConstraintConfigurator(),
-            new ContentfulConfigurator(),
             new CookieConfigurator(),
             new EnvironmentConfigurator()
         ]))->getConfigTreeBuilder());
