@@ -58,7 +58,11 @@ class AnnotationSubscriber implements EventSubscriberInterface
      */
     public function onKernelController(FilterControllerEvent $event)
     {
-        $controller = $event->getController();
+        $eventController = $event->getController();
+
+        $controller =  is_array($eventController) === false && method_exists($eventController, '__invoke')
+            ? [$eventController, '__invoke']
+            : $eventController;
 
         /*
          * $controller passed can be either a class or a Closure.
