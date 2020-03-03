@@ -16,7 +16,7 @@
     "symfony/yaml": "^5.0",
     "symfony/config": "^5.0",
     "symfony/http-kernel": "^5.0",
-    "twig/twig": "^1.18|^2.0",
+    "twig/twig": "^1.18|^2.0|^3.0",
     "doctrine/annotations": "^1.0",
     "flagception/flagception": "^1.5"
   },
