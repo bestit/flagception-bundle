@@ -85,7 +85,88 @@ or via xml
         <controller>AppBundle:Blog:list</controller>
         <default key="_feature">feature_123</default>
     </route>
-    
+
+    <!-- ... -->
+</routes>
+```
+
+To check for multiple features, pass them as an array to the route definition.
+
+```php
+// src/AppBundle/Controller/BlogController.php
+// src/Controller/BlogController.php
+namespace AppBundle\Controller;
+
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+
+class BlogController extends Controller
+{
+    /**
+     * @Route("/blog/{page}", defaults={"_feature": {"feature_123", "feature_456"}})
+     */
+    public function listAction($page)
+    {
+        // ...
+    }
+
+    /**
+     * @Route("/blog/{slug}")
+     */
+    public function showAction($slug)
+    {
+        // ...
+    }
+}
+```
+or via yml
+
+```yml
+# app/config/routing.yml
+blog_list:
+    path:      /blog/{page}
+    defaults:  { _controller: AppBundle:Blog:list, _feature: ['feature_456', 'feature_789'] }
+
+# Symfony 3.4 / 4.0
+blog_list:
+    path:       /blog/{page}
+    controller: AppBundle:Blog:list
+    defaults:   { _feature: ['feature_456', 'feature_789'] }
+
+blog_show:
+```
+
+or via xml
+
+```xml
+<!-- app/config/routing.xml -->
+<?xml version="1.0" encoding="UTF-8" ?>
+<routes xmlns="http://symfony.com/schema/routing"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/routing
+        http://symfony.com/schema/routing/routing-1.0.xsd">
+
+    <route id="blog_list" path="/blog/{page}">
+        <default key="_controller">AppBundle:Blog:list</default>
+        <default key="_feature">
+            <list>
+                <string>feature_123</string>
+                <string>feature_456</string>
+            </list>
+        </default>
+    </route>
+
+    <!-- Symfony 3.4 / 4.0 -->
+    <route id="blog_list" path="/blog/{page}">
+        <controller>AppBundle:Blog:list</controller>
+        <default key="_feature">
+            <list>
+                <string>feature_123</string>
+                <string>feature_456</string>
+            </list>
+        </default>
+    </route>
+
     <!-- ... -->
 </routes>
 ```
