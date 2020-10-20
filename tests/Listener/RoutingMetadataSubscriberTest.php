@@ -117,4 +117,56 @@ class RoutingMetadataSubscriberTest extends TestCase
         $subscriber = new RoutingMetadataSubscriber($manager);
         $subscriber->onKernelController($event);
     }
+
+    /**
+     * Test features are not active
+     *
+     * @return void
+     */
+    public function testRouteWithMultipleFeaturesIsNotActive()
+    {
+        $this->expectException(NotFoundHttpException::class);
+
+        $request = new Request([], [], ['_feature' => ['feature_abc', 'feature_def']]);
+
+        $event = $this->createMock(FilterControllerEvent::class);
+        $event
+            ->method('getRequest')
+            ->willReturn($request);
+
+        $manager = $this->createMock(FeatureManagerInterface::class);
+        $manager
+            ->expects(static::exactly(2))
+            ->method('isActive')
+            ->withConsecutive(['feature_abc'], ['feature_def'])
+            ->willReturnOnConsecutiveCalls(true, false);
+
+        $subscriber = new RoutingMetadataSubscriber($manager);
+        $subscriber->onKernelController($event);
+    }
+
+    /**
+     * Test features are active
+     *
+     * @return void
+     */
+    public function testRouteWithMultipleFeaturesIsActive()
+    {
+        $request = new Request([], [], ['_feature' => ['feature_abc', 'feature_def']]);
+
+        $event = $this->createMock(FilterControllerEvent::class);
+        $event
+            ->method('getRequest')
+            ->willReturn($request);
+
+        $manager = $this->createMock(FeatureManagerInterface::class);
+        $manager
+            ->expects(static::exactly(2))
+            ->method('isActive')
+            ->withConsecutive(['feature_abc'], ['feature_def'])
+            ->willReturnOnConsecutiveCalls(true, true);
+
+        $subscriber = new RoutingMetadataSubscriber($manager);
+        $subscriber->onKernelController($event);
+    }
 }
