@@ -2,9 +2,12 @@
 
 namespace Flagception\Tests\FlagceptionBundle\Listener;
 
+use Flagception\Bundle\FlagceptionBundle\Event\ContextResolveEvent;
 use Flagception\Bundle\FlagceptionBundle\Listener\RoutingMetadataSubscriber;
 use Flagception\Manager\FeatureManagerInterface;
+use Flagception\Model\Context;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -182,6 +185,39 @@ class RoutingMetadataSubscriberTest extends TestCase
             ->willReturnOnConsecutiveCalls(true, true);
 
         $subscriber = new RoutingMetadataSubscriber($manager);
+        $subscriber->onKernelController($event);
+    }
+
+    /**
+     * Test event is dispatched when event dispatcher exists
+     *
+     * @return void
+     */
+    public function testEventIsDispatchedWhenEventDispatcherExists()
+    {
+        $context = new Context();
+
+        $request = new Request([], [], ['_feature' => 'feature_abc']);
+        $event = $this->createControllerEvent($request);
+
+        $manager = $this->createMock(FeatureManagerInterface::class);
+        $manager
+            ->expects(static::once())
+            ->method('isActive')
+            ->with('feature_abc', $context)
+            ->willReturn(true);
+
+        $listener = function (ContextResolveEvent $event) use ($context) {
+            $this->assertNotSame($event->getContext(), $context);
+            $event->setContext($context);
+            $this->assertSame($event->getContext(), $context);
+            return $event;
+        };
+
+        $eventDispatcher = new EventDispatcher();
+        $eventDispatcher->addListener(ContextResolveEvent::class, $listener);
+
+        $subscriber = new RoutingMetadataSubscriber($manager, $eventDispatcher);
         $subscriber->onKernelController($event);
     }
 }

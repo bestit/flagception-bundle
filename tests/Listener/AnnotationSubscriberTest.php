@@ -3,10 +3,13 @@
 namespace Flagception\Tests\FlagceptionBundle\Listener;
 
 use Doctrine\Common\Annotations\AnnotationReader;
+use Flagception\Bundle\FlagceptionBundle\Event\ContextResolveEvent;
 use Flagception\Bundle\FlagceptionBundle\Listener\AnnotationSubscriber;
 use Flagception\Manager\FeatureManagerInterface;
+use Flagception\Model\Context;
 use Flagception\Tests\FlagceptionBundle\Fixtures\Helper\AnnotationTestClass;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\ControllerEvent;
@@ -150,6 +153,36 @@ class AnnotationSubscriberTest extends TestCase
         ]);
 
         $subscriber = new AnnotationSubscriber(new AnnotationReader(), $manager);
+        $subscriber->onKernelController($event);
+    }
+
+    /**
+     * Test event is dispatched when event dispatcher exists
+     *
+     * @return void
+     */
+    public function testEventIsDispatchedWhenEventDispatcherExists()
+    {
+        $context = new Context();
+        $manager = $this->createMock(FeatureManagerInterface::class);
+        $manager->method('isActive')->with('feature_abc', $context)->willReturn(true);
+
+        $listener = function (ContextResolveEvent $event) use ($context) {
+            $this->assertNotSame($event->getContext(), $context);
+            $event->setContext($context);
+            $this->assertSame($event->getContext(), $context);
+            return $event;
+        };
+
+        $eventDispatcher = new EventDispatcher();
+        $eventDispatcher->addListener(ContextResolveEvent::class, $listener);
+
+        $event = $this->createControllerEvent([
+            new AnnotationTestClass(),
+            'normalMethod'
+        ]);
+
+        $subscriber = new AnnotationSubscriber(new AnnotationReader(), $manager, $eventDispatcher);
         $subscriber->onKernelController($event);
     }
 

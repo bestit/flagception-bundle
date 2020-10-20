@@ -17,6 +17,7 @@ services:
         class: Flagception\Bundle\FlagceptionBundle\Twig\ToggleExtension
         arguments:
             - '@flagception.manager.feature_manager'
+            - '@event_dispatcher'
         tags:
             - { name: twig.extension }
         public: false
@@ -69,6 +70,7 @@ services:
         arguments:
             - '@annotations.reader'
             - '@flagception.manager.feature_manager'
+            - '@event_dispatcher'
         tags:
             - { name: kernel.event_subscriber }
         public: true
@@ -78,6 +80,7 @@ services:
         class: Flagception\Bundle\FlagceptionBundle\Listener\RoutingMetadataSubscriber
         arguments:
             - '@flagception.manager.feature_manager'
+            - '@event_dispatcher'
         tags:
             - { name: kernel.event_subscriber }
         public: true

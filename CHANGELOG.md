@@ -1,6 +1,7 @@
 ## [Unreleased]
 ### Added
 - \#80 Support for multiple features in route definition @ajgarlag
+- \#84 ContextResolveEvent to allow context customization when checking for a feature @ajgarlag
 
 ### Changed
 - \#82 Restore support for Symfony 4.4 LTS @ajgarlag

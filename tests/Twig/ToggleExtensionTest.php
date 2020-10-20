@@ -2,10 +2,12 @@
 
 namespace Flagception\Tests\FlagceptionBundle\Twig;
 
+use Flagception\Bundle\FlagceptionBundle\Event\ContextResolveEvent;
+use Flagception\Bundle\FlagceptionBundle\Twig\ToggleExtension;
 use Flagception\Manager\FeatureManagerInterface;
 use Flagception\Model\Context;
-use Flagception\Bundle\FlagceptionBundle\Twig\ToggleExtension;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
  * Class ToggleExtensionTest
@@ -74,5 +76,37 @@ class ToggleExtensionTest extends TestCase
     {
         $extension = new ToggleExtension($this->createMock(FeatureManagerInterface::class));
         static::assertEquals('flagception', $extension->getName());
+    }
+
+    /**
+     * Test event is dispatched when event dispatcher exists
+     *
+     * @return void
+     */
+    public function testEventIsDispatchedWhenEventDispatcherExists()
+    {
+        $context = new Context();
+
+        $listener = function (ContextResolveEvent $event) use ($context) {
+            $this->assertNotSame($event->getContext(), $context);
+            $event->setContext($context);
+            $this->assertSame($event->getContext(), $context);
+            return $event;
+        };
+
+        $eventDispatcher = new EventDispatcher();
+        $eventDispatcher->addListener(ContextResolveEvent::class, $listener);
+
+        $extension = new ToggleExtension(
+            $manager = $this->createMock(FeatureManagerInterface::class),
+            $eventDispatcher
+        );
+
+        $manager
+            ->method('isActive')
+            ->with('feature_foo', $context)
+            ->willReturn(true);
+
+        static::assertEquals(true, $extension->isActive('feature_foo'));
     }
 }

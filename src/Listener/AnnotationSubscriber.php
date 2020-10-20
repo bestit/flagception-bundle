@@ -2,15 +2,17 @@
 
 namespace Flagception\Bundle\FlagceptionBundle\Listener;
 
-use Flagception\Bundle\FlagceptionBundle\Annotations\Feature;
-use Flagception\Manager\FeatureManagerInterface;
 use Doctrine\Common\Annotations\Reader;
+use Flagception\Bundle\FlagceptionBundle\Annotations\Feature;
+use Flagception\Bundle\FlagceptionBundle\Event\ContextResolveEvent;
+use Flagception\Manager\FeatureManagerInterface;
 use ReflectionClass;
 use ReflectionException;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\ControllerEvent;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Class AnnotationSubscriber
@@ -35,15 +37,27 @@ class AnnotationSubscriber implements EventSubscriberInterface
     private $manager;
 
     /**
+     * The event dispatcher
+     *
+     * @var ?EventDispatcherInterface
+     */
+    private $eventDispatcher;
+
+    /**
      * FeatureListener constructor.
      *
      * @param Reader $reader
      * @param FeatureManagerInterface $manager
+     * @param EventDispatcherInterface $eventDispatcher
      */
-    public function __construct(Reader $reader, FeatureManagerInterface $manager)
-    {
+    public function __construct(
+        Reader $reader,
+        FeatureManagerInterface $manager,
+        EventDispatcherInterface $eventDispatcher = null
+    ) {
         $this->reader = $reader;
         $this->manager = $manager;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -73,10 +87,16 @@ class AnnotationSubscriber implements EventSubscriberInterface
             return;
         }
 
+        $context = null;
+        if (null !== $this->eventDispatcher) {
+            $contextEvent = $this->eventDispatcher->dispatch(new ContextResolveEvent());
+            $context = $contextEvent->getContext();
+        }
+
         $object = new ReflectionClass($controller[0]);
         foreach ($this->reader->getClassAnnotations($object) as $annotation) {
             if ($annotation instanceof Feature) {
-                if (!$this->manager->isActive($annotation->name)) {
+                if (!$this->manager->isActive($annotation->name, $context)) {
                     throw new NotFoundHttpException('Feature for this class is not active.');
                 }
             }
@@ -85,7 +105,7 @@ class AnnotationSubscriber implements EventSubscriberInterface
         $method = $object->getMethod($controller[1]);
         foreach ($this->reader->getMethodAnnotations($method) as $annotation) {
             if ($annotation instanceof Feature) {
-                if (!$this->manager->isActive($annotation->name)) {
+                if (!$this->manager->isActive($annotation->name, $context)) {
                     throw new NotFoundHttpException('Feature for this method is not active.');
                 }
             }

@@ -2,8 +2,10 @@
 
 namespace Flagception\Bundle\FlagceptionBundle\Twig;
 
+use Flagception\Bundle\FlagceptionBundle\Event\ContextResolveEvent;
 use Flagception\Manager\FeatureManagerInterface;
 use Flagception\Model\Context;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 use Twig\TwigTest;
@@ -24,13 +26,22 @@ class ToggleExtension extends AbstractExtension
     private $manager;
 
     /**
+     * The event dispatcher
+     *
+     * @var ?EventDispatcherInterface
+     */
+    private $eventDispatcher;
+
+    /**
      * ToggleExtension constructor.
      *
      * @param FeatureManagerInterface $manager
+     * @param EventDispatcherInterface $eventDispatcher
      */
-    public function __construct(FeatureManagerInterface $manager)
+    public function __construct(FeatureManagerInterface $manager, EventDispatcherInterface $eventDispatcher = null)
     {
         $this->manager = $manager;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -46,6 +57,11 @@ class ToggleExtension extends AbstractExtension
         $context = new Context();
         foreach ($contextValues as $contextKey => $contextValue) {
             $context->add($contextKey, $contextValue);
+        }
+
+        if (null !== $this->eventDispatcher) {
+            $contextEvent = $this->eventDispatcher->dispatch(new ContextResolveEvent($context));
+            $context = $contextEvent->getContext();
         }
 
         return $this->manager->isActive($name, $context);

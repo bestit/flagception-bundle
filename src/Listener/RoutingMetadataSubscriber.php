@@ -2,11 +2,13 @@
 
 namespace Flagception\Bundle\FlagceptionBundle\Listener;
 
+use Flagception\Bundle\FlagceptionBundle\Event\ContextResolveEvent;
 use Flagception\Manager\FeatureManagerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\ControllerEvent;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Class RoutingMetadataSubscriber
@@ -31,13 +33,22 @@ class RoutingMetadataSubscriber implements EventSubscriberInterface
     private $manager;
 
     /**
+     * The event dispatcher
+     *
+     * @var ?EventDispatcherInterface
+     */
+    private $eventDispatcher;
+
+    /**
      * RoutingMetadataSubscriber constructor.
      *
      * @param FeatureManagerInterface $manager
+     * @param EventDispatcherInterface $eventDispatcher
      */
-    public function __construct(FeatureManagerInterface $manager)
+    public function __construct(FeatureManagerInterface $manager, EventDispatcherInterface $eventDispatcher = null)
     {
         $this->manager = $manager;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -54,9 +65,15 @@ class RoutingMetadataSubscriber implements EventSubscriberInterface
             return;
         }
 
+        $context = null;
+        if (null !== $this->eventDispatcher) {
+            $contextEvent = $this->eventDispatcher->dispatch(new ContextResolveEvent());
+            $context = $contextEvent->getContext();
+        }
+
         $featureNames = (array) $event->getRequest()->attributes->get(static::FEATURE_KEY);
         foreach ($featureNames as $featureName) {
-            if (!$this->manager->isActive($featureName)) {
+            if (!$this->manager->isActive($featureName, $context)) {
                 throw new NotFoundHttpException('Feature for this class is not active.');
             }
         }
