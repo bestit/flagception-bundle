@@ -1,4 +1,4 @@
-## [Unreleased]
+## [4.1.0]
 ### Added
 - \#80 Support for multiple features in route definition @ajgarlag
 
