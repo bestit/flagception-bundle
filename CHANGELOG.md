@@ -1,6 +1,14 @@
-## [3.5.0]
+## [3.6.0]
 ### Added
 - Support for multiple features in route definition @ajgarlag
+
+## [3.5.1]
+### Fix
+- Fix subscriber for invokable controllers @vitsadecky
+
+## [3.5.0]
+### Added
+- Add support for twig3 @migo315
 
 ## [3.4.0]
 ### Changed
