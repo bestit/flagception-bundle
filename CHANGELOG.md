@@ -1,6 +1,17 @@
 ## [Unreleased]
+### Added
+- \#80 Support for multiple features in route definition @ajgarlag
+
 ### Changed
 - \#82 Restore support for Symfony 4.4 LTS @ajgarlag
+
+## [4.0.2]
+### Changed
+- Enabled support for twig v3
+
+## [4.0.1]
+### Fix
+- Fix subscriber for invokable controllers @vitsadecky
 
 ## [4.0.0]
 ### Changed
@@ -9,6 +20,14 @@
 - Drop Contentful Activator @migo315
 - \#64 Add Travis tests for Symony 5 @migo315
 - \#59 Update PHP requirements @migo315
+
+## [3.6.0]
+### Added
+- Support for multiple features in route definition @ajgarlag
+
+## [3.5.1]
+### Fix
+- Fix subscriber for invokable controllers @vitsadecky
 
 ## [3.5.0]
 ### Changed
