@@ -1,3 +1,7 @@
+## [3.5.0]
+### Added
+- Support for multiple features in route definition @ajgarlag
+
 ## [3.4.0]
 ### Changed
 - Update to Flagception SDK Version ^1.5 @migo315
