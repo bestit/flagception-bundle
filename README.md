@@ -13,7 +13,7 @@ This bundle integrates the [Flagception PHP Libary](https://packagist.org/packag
 | Bundle Version (Tag) | Support Symfony | Branch |
 |----------------------|-----------------|--------|
 | <=3                  | 2.7 - 4.4       | 3.x    |
-| >=4                  | 5.0 - current   | master |
+| >=4                  | 4.4 - current   | master |
 
 ```console
 $ composer require flagception/flagception-bundle
