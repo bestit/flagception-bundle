@@ -1,3 +1,7 @@
+## [Unreleased]
+### Changed
+- \#82 Restore support for Symfony 4.4 LTS @ajgarlag
+
 ## [4.0.0]
 ### Changed
 - \#67 Add compatibility for Symfony 5 @migo315

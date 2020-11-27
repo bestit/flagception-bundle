@@ -5,7 +5,6 @@ namespace Flagception\Tests\FlagceptionBundle\DependencyInjection\Configurator;
 use Flagception\Bundle\FlagceptionBundle\DependencyInjection\Configurator\DatabaseConfigurator;
 use Flagception\Bundle\FlagceptionBundle\DependencyInjection\FlagceptionExtension;
 use LogicException;
-use phpmock\phpunit\PHPMock;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -20,8 +19,6 @@ use Symfony\Component\DependencyInjection\Loader;
  */
 class DatabaseConfiguratorTest extends TestCase
 {
-    use PHPMock;
-
     /**
      * The container
      *
