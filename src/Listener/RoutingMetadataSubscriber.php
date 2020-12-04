@@ -54,9 +54,11 @@ class RoutingMetadataSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $featureName = $event->getRequest()->attributes->get(static::FEATURE_KEY);
-        if (!$this->manager->isActive($featureName)) {
-            throw new NotFoundHttpException('Feature for this class is not active.');
+        $featureNames = (array) $event->getRequest()->attributes->get(static::FEATURE_KEY);
+        foreach ($featureNames as $featureName) {
+            if (!$this->manager->isActive($featureName)) {
+                throw new NotFoundHttpException('Feature for this class is not active.');
+            }
         }
     }
 
