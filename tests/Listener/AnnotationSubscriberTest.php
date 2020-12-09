@@ -168,6 +168,7 @@ class AnnotationSubscriberTest extends TestCase
         $manager->method('isActive')->with('feature_abc', $context)->willReturn(true);
 
         $listener = function (ContextResolveEvent $event) use ($context) {
+            $this->assertSame('feature_abc', $event->getFeature());
             $this->assertNotSame($event->getContext(), $context);
             $event->setContext($context);
             $this->assertSame($event->getContext(), $context);

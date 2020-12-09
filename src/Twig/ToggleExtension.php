@@ -60,7 +60,7 @@ class ToggleExtension extends AbstractExtension
         }
 
         if (null !== $this->eventDispatcher) {
-            $contextEvent = $this->eventDispatcher->dispatch(new ContextResolveEvent($context));
+            $contextEvent = $this->eventDispatcher->dispatch(new ContextResolveEvent($name, $context));
             $context = $contextEvent->getContext();
         }
 

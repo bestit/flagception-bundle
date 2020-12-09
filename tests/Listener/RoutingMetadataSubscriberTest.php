@@ -208,6 +208,7 @@ class RoutingMetadataSubscriberTest extends TestCase
             ->willReturn(true);
 
         $listener = function (ContextResolveEvent $event) use ($context) {
+            $this->assertSame('feature_abc', $event->getFeature());
             $this->assertNotSame($event->getContext(), $context);
             $event->setContext($context);
             $this->assertSame($event->getContext(), $context);

@@ -88,6 +88,7 @@ class ToggleExtensionTest extends TestCase
         $context = new Context();
 
         $listener = function (ContextResolveEvent $event) use ($context) {
+            $this->assertSame('feature_foo', $event->getFeature());
             $this->assertNotSame($event->getContext(), $context);
             $event->setContext($context);
             $this->assertSame($event->getContext(), $context);

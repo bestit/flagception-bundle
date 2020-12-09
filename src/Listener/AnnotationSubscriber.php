@@ -87,15 +87,17 @@ class AnnotationSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $context = null;
-        if (null !== $this->eventDispatcher) {
-            $contextEvent = $this->eventDispatcher->dispatch(new ContextResolveEvent());
-            $context = $contextEvent->getContext();
-        }
+
 
         $object = new ReflectionClass($controller[0]);
         foreach ($this->reader->getClassAnnotations($object) as $annotation) {
             if ($annotation instanceof Feature) {
+                $context = null;
+                if (null !== $this->eventDispatcher) {
+                    $contextEvent = $this->eventDispatcher->dispatch(new ContextResolveEvent($annotation->name));
+                    $context = $contextEvent->getContext();
+                }
+
                 if (!$this->manager->isActive($annotation->name, $context)) {
                     throw new NotFoundHttpException('Feature for this class is not active.');
                 }
@@ -104,6 +106,11 @@ class AnnotationSubscriber implements EventSubscriberInterface
 
         $method = $object->getMethod($controller[1]);
         foreach ($this->reader->getMethodAnnotations($method) as $annotation) {
+            $context = null;
+            if (null !== $this->eventDispatcher) {
+                $contextEvent = $this->eventDispatcher->dispatch(new ContextResolveEvent($annotation->name));
+                $context = $contextEvent->getContext();
+            }
             if ($annotation instanceof Feature) {
                 if (!$this->manager->isActive($annotation->name, $context)) {
                     throw new NotFoundHttpException('Feature for this method is not active.');

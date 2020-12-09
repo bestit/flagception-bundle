@@ -65,14 +65,13 @@ class RoutingMetadataSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $context = null;
-        if (null !== $this->eventDispatcher) {
-            $contextEvent = $this->eventDispatcher->dispatch(new ContextResolveEvent());
-            $context = $contextEvent->getContext();
-        }
-
         $featureNames = (array) $event->getRequest()->attributes->get(static::FEATURE_KEY);
         foreach ($featureNames as $featureName) {
+            $context = null;
+            if (null !== $this->eventDispatcher) {
+                $contextEvent = $this->eventDispatcher->dispatch(new ContextResolveEvent($featureName));
+                $context = $contextEvent->getContext();
+            }
             if (!$this->manager->isActive($featureName, $context)) {
                 throw new NotFoundHttpException('Feature for this class is not active.');
             }
