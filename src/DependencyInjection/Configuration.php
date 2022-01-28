@@ -36,7 +36,7 @@ class Configuration implements ConfigurationInterface
     /**
      * {@inheritdoc}
      */
-    public function getConfigTreeBuilder()
+    public function getConfigTreeBuilder(): TreeBuilder
     {
         $treeBuilder = new TreeBuilder('flagception');
         $rootNode = $treeBuilder->getRootNode();
@@ -108,7 +108,7 @@ class Configuration implements ConfigurationInterface
      *
      * @return NodeDefinition
      */
-    public function appendActivators()
+    public function appendActivators(): NodeDefinition
     {
         $builder = new TreeBuilder('activators');
         $node = $builder->getRootNode();

@@ -71,7 +71,7 @@ class FlagceptionExtension extends Extension
      *
      * @throws Exception
      */
-    private function getConfigurators(ContainerBuilder $container)
+    private function getConfigurators(ContainerBuilder $container): array
     {
         $configurators = [];
 

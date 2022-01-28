@@ -41,7 +41,7 @@ class ToggleExtension extends AbstractExtension
      *
      * @return bool
      */
-    public function isActive($name, array $contextValues = [])
+    public function isActive(string $name, array $contextValues = []): bool
     {
         $context = new Context();
         foreach ($contextValues as $contextKey => $contextValue) {
@@ -54,7 +54,7 @@ class ToggleExtension extends AbstractExtension
     /**
      * {@inheritDoc}
      */
-    public function getFunctions()
+    public function getFunctions(): array
     {
         return [
             new TwigFunction('feature', [$this, 'isActive']),
@@ -64,7 +64,7 @@ class ToggleExtension extends AbstractExtension
     /**
      * {@inheritDoc}
      */
-    public function getTests()
+    public function getTests(): array
     {
         return [
             new TwigTest('active feature', [$this, 'isActive']),
@@ -77,7 +77,7 @@ class ToggleExtension extends AbstractExtension
      *
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return 'flagception';
     }

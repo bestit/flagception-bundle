@@ -95,7 +95,7 @@ class FeatureDataCollector extends DataCollector
                 ];
             }
 
-            $featureTrace = &$this->data['requests'][$trace['feature']];
+            $featureTrace = $this->data['requests'][$trace['feature']];
             $featureTrace['requests']++;
 
             if ($trace['result'] === true) {
@@ -117,6 +117,7 @@ class FeatureDataCollector extends DataCollector
                     $this->data['activators'][$activator]['inactiveRequests']++;
                 }
             }
+            $this->data['requests'][$trace['feature']] = $featureTrace;
         }
 
         $this->data['summary']['features'] = count($this->data['requests']);
@@ -136,7 +137,7 @@ class FeatureDataCollector extends DataCollector
      *
      * @return array
      */
-    public function getRequests()
+    public function getRequests(): array
     {
         return $this->data['requests'];
     }
@@ -146,7 +147,7 @@ class FeatureDataCollector extends DataCollector
      *
      * @return array
      */
-    public function getActivators()
+    public function getActivators(): array
     {
         return $this->data['activators'];
     }
@@ -156,7 +157,7 @@ class FeatureDataCollector extends DataCollector
      *
      * @return array
      */
-    public function getDecorators()
+    public function getDecorators(): array
     {
         return $this->data['decorators'];
     }
@@ -166,7 +167,7 @@ class FeatureDataCollector extends DataCollector
      *
      * @return array
      */
-    public function getTrace()
+    public function getTrace(): array
     {
         return $this->data['trace'];
     }
@@ -176,7 +177,7 @@ class FeatureDataCollector extends DataCollector
      *
      * @return array
      */
-    public function getSummary()
+    public function getSummary(): array
     {
         return $this->data['summary'];
     }
@@ -184,7 +185,7 @@ class FeatureDataCollector extends DataCollector
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getName(): string
     {
         return 'flagception';
     }
