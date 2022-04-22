@@ -56,7 +56,7 @@ services:
         public: false
 
     flagception.activator.chain_activator:
-        class: Flagception\Bundle\FlagceptionBundle\Activator\TraceableChainActivator
+        class: Flagception\Activator\ChainActivator
         public: false
 
     flagception.decorator.chain_decorator:

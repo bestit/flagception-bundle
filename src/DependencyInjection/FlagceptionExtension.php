@@ -4,6 +4,7 @@ namespace Flagception\Bundle\FlagceptionBundle\DependencyInjection;
 
 use Exception;
 use Flagception\Activator\FeatureActivatorInterface;
+use Flagception\Bundle\FlagceptionBundle\Activator\TraceableChainActivator;
 use Flagception\Bundle\FlagceptionBundle\DependencyInjection\Configurator\ActivatorConfiguratorInterface;
 use Flagception\Decorator\ContextDecoratorInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -49,6 +50,11 @@ class FlagceptionExtension extends Extension
             }
 
             $configurator->addActivator($container, $config['activators'][$name], $config['features']);
+        }
+
+        if ($container->hasParameter('kernel.debug') && $container->getParameter('kernel.debug')) {
+            $chainDefinition = $container->getDefinition('flagception.activator.chain_activator');
+            $chainDefinition->setClass(TraceableChainActivator::class);
         }
 
         if (method_exists($container, 'registerForAutoconfiguration') === true) {
