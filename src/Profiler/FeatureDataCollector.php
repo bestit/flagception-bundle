@@ -2,7 +2,7 @@
 
 namespace Flagception\Bundle\FlagceptionBundle\Profiler;
 
-use Flagception\Bundle\FlagceptionBundle\Activator\TraceableChainActivator;
+use Flagception\Activator\ChainActivator;
 use Flagception\Decorator\ChainDecorator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,7 +20,7 @@ class FeatureDataCollector extends DataCollector
     /**
      * The profiler chain activator
      *
-     * @var TraceableChainActivator
+     * @var ChainActivator
      */
     private $chainActivator;
 
@@ -34,10 +34,10 @@ class FeatureDataCollector extends DataCollector
     /**
      * FeatureDataCollector constructor.
      *
-     * @param TraceableChainActivator $chainActivator
+     * @param ChainActivator $chainActivator
      * @param ChainDecorator $chainDecorator
      */
-    public function __construct(TraceableChainActivator $chainActivator, ChainDecorator $chainDecorator)
+    public function __construct(ChainActivator $chainActivator, ChainDecorator $chainDecorator)
     {
         $this->chainActivator = $chainActivator;
         $this->chainDecorator = $chainDecorator;
