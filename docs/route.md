@@ -48,6 +48,18 @@ class BlogController extends Controller
     }
 }
 ```
+
+Symfony 6.1+ can check for the feature in the condition
+```php
+    /**
+     * @Route("/blog/{page}", condition="service('flagception.manager.feature_manager').isActive('feature_123')")
+     */
+    public function listAction($page)
+    {
+        // ...
+    }
+```
+
 or via yml
 
 ```yml
