@@ -1,11 +1,13 @@
 services:
     flagception.manager.feature_manager:
         class: Flagception\Manager\FeatureManager
+        tags:
+            - { name: routing.condition_service }
         arguments:
             - '@flagception.activator.chain_activator'
             - '@flagception.decorator.chain_decorator'
         public: true
-        
+
     Flagception\Manager\FeatureManagerInterface: '@flagception.manager.feature_manager'
 
     flagception.expression_language:
