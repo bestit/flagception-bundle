@@ -74,6 +74,18 @@ class AnnotationSubscriber implements EventSubscriberInterface
         }
 
         $object = new ReflectionClass($controller[0]);
+
+        // check for php8 attributes on the controller class
+        if (method_exists($object, 'getAttributes')) {
+            foreach ($object->getAttributes(Feature::class) as $attribute) {
+                $name = $attribute->getArguments()['name'];
+                if (!$this->manager->isActive($name)) {
+                    throw new NotFoundHttpException(sprintf('Feature %s for class %s is not active.', $name, $object->getName()));
+                }
+            }
+        }
+
+
         foreach ($this->reader->getClassAnnotations($object) as $annotation) {
             if ($annotation instanceof Feature) {
                 if (!$this->manager->isActive($annotation->name)) {
@@ -83,6 +95,17 @@ class AnnotationSubscriber implements EventSubscriberInterface
         }
 
         $method = $object->getMethod($controller[1]);
+
+        // check for php8 attributes on the method
+        if (method_exists($method, 'getAttributes')) {
+            foreach ($method->getAttributes(Feature::class) as $attribute) {
+                $name = $attribute->getArguments()['name'];
+                if (!$this->manager->isActive($name)) {
+                    throw new NotFoundHttpException(sprintf('Feature %s for method %s is not active.', $name, $method->getName()));
+                }
+            }
+        }
+
         foreach ($this->reader->getMethodAnnotations($method) as $annotation) {
             if ($annotation instanceof Feature) {
                 if (!$this->manager->isActive($annotation->name)) {
