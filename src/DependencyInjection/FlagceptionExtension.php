@@ -68,6 +68,11 @@ class FlagceptionExtension extends Extension
         }
     }
 
+    public function getConfiguration(array $config, ContainerBuilder $container)
+    {
+        return new Configuration($this->getConfigurators($container));
+    }
+
     /**
      * Get configurators
      *
