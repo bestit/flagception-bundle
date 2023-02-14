@@ -32,7 +32,7 @@ jobs:
           - php: '8.2'
             symfony-version: 6.2.*
         exclude:
-          - php: '8.2'
+          - php: '8.0'
             symfony-version: 6.2.*
 
     name: PHP ${{ matrix.php }} - ${{ matrix.symfony-version }} ${{ matrix.stability }} tests
