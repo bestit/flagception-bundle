@@ -21,7 +21,7 @@
     "flagception/flagception": "^1.5"
   },
   "require-dev": {
-    "symfony/phpunit-bridge": "^4.4 | ^5.0 | ^6.0",
+    "symfony/phpunit-bridge": "^5.0 | ^6.0",
     "symfony/twig-bridge": "^4.4 | ^5.0 | ^6.0",
     "flagception/database-activator": "^1.0",
     "squizlabs/php_codesniffer": "^3.3.1"
