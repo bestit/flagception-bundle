@@ -62,7 +62,7 @@ jobs:
       - name: Execute tests
         env:
           SYMFONY_DEPRECATIONS_HELPER: 'weak'
-        run: vendor/bin/phpunit --verbose
+        run: vendor/bin/simple-phpunit --verbose
 
 
   cs:
