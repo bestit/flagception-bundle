@@ -47,8 +47,8 @@ jobs:
       - uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
-          extensions: pcov
-          coverage: pcov
+          extensions: pcov, xdebug
+          coverage: xdebug
 
       - name: Install dependencies
         env:
