@@ -75,3 +75,13 @@ jobs:
           coverage: none
       - run: composer install --no-progress
       - run: ./vendor/bin/phpcs
+
+  finish:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Coveralls Finished
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.github_token }}
+          parallel-finished: true
