@@ -32,9 +32,7 @@ jobs:
           - php: '8.2'
             symfony-version: 6.2
 
-    continue-on-error: ${{ matrix.experimental }}
-
-    name: PHP ${{ matrix.php }} - ${{ matrix.stability }} tests
+    name: PHP ${{ matrix.php }} - ${{ matrix.symfony-version }} ${{ matrix.stability }} tests
     steps:
       # basically git clone
       - uses: actions/checkout@v3
@@ -76,4 +74,4 @@ jobs:
           php-version: 7.4
           coverage: none
       - run: composer install --no-progress
-      - run: composer ./vendor/bin/phpcs
+      - run: ./vendor/bin/phpcs
