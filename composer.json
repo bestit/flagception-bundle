@@ -17,7 +17,7 @@
     "symfony/config": "^4.4 | ^5.0 | ^6.0",
     "symfony/http-kernel": "^4.4 | ^5.0 | ^6.0",
     "twig/twig": "^1.18|^2.0|^3.0",
-    "doctrine/annotations": "^1.7",
+    "doctrine/annotations": "^1.7|^2.0",
     "flagception/flagception": "^1.5"
   },
   "require-dev": {
